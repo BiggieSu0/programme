@@ -273,12 +273,12 @@ var WEEKS = [
  {n:2,d:"24–30 août",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"7 × (2 min / 2 min)"},note:"Mêmes charges qu'en S1, +1 rep par série si ça passe. La séance C arrive."},
  {n:3,d:"31 août – 6 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"6 × (3 min / 90 s)"},note:"<b>Cible atteinte.</b> On resserre à 1-2 reps de la fin. Échec autorisé sur la dernière série des exos marqués."},
  {n:4,d:"7–13 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"5 × (5 min / 90 s)"},note:"La semaine la plus lourde du bloc."},
- {n:5,d:"14–18 sept",bloc:1,ph:"Test",dl:true,sess:["A","B","V"],run:{c:2,t:"4 × (8 min / 2 min) puis TEST 5 KM"},note:"<b>Allégée : −1 série par exercice.</b> Test 5 km + photos avant Bali."},
- {n:6,d:"19–27 sept",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre bord de mer, 20-30 min"},note:"<b>Maintien.</b> Entretien ~2900-3000 kcal, profite. 2-3 séances, pas plus."},
+ {n:5,d:"14–18 sept",bloc:1,ph:"Test",dl:true,sess:["A","B","C","V"],run:{c:2,t:"4 × (8 min / 2 min) puis TEST 5 KM"},note:"<b>Semaine complète, pas d’allègement.</b> Test 5 km + photos avant Bali."},
+ {n:6,d:"19–27 sept",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre bord de mer, 20-30 min"},note:"<b>Maintien.</b> Entretien ~2900-3000 kcal, profite. 2 séances, pas plus."},
  {n:7,d:"28 sept – 4 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre — vise le 5 km continu"},note:"Le 5 km continu se joue ici : reposé, plus léger, au niveau de la mer."},
  {n:8,d:"5–11 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre"},note:"Dernière semaine de vacances. Retour dimanche."},
- {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × 25 min continu"},note:"<b>Reprise.</b> +1 série dos/épaules. Retour au déficit. Repars 10 % sous tes charges de S4."},
- {n:10,d:"19–25 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × 25-30 min continu"},note:"Retour aux charges de S4, puis on dépasse."},
+ {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × 25 min continu"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps haltère et écarté incliné. Retour au déficit."},
+ {n:10,d:"19–25 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × 25-30 min continu"},note:"Retour aux charges de S5, puis on dépasse."},
  {n:11,d:"26 oct – 1 nov",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × 30 min continu"},note:"Volume maximal du programme."},
  {n:12,d:"2–8 nov",bloc:3,ph:"Bilan",dl:true,sess:["A","B","C","V"],run:{c:2,t:"2 × 30 min + 5 km chrono"},note:"<b>Dernière semaine.</b> Tests, photos, mesures, bilan ensemble."}
 ];
@@ -374,7 +374,7 @@ function rCal(){
 
  h+='<div class="days">';
  var layout;
- if(w.bloc==2){layout=[["Séance 1","H"],["Séance 2","H2"],["Séance 3","H3"],["Course","runB"]];}
+ if(w.bloc==2){layout=[["Séance 1","H"],["Séance 2","H2"],["Course","runB"]];}
  else{layout=[["Lundi","B"],["Mardi","A"],["Mardi soir","run1"],["Mercredi","C"],["Jeudi","cours"],["Vendredi","V"],["Samedi","runL"],["Dimanche","rest"]];}
  layout.forEach(function(dd){
   var day=dd[0],code=dd[1];
@@ -418,11 +418,18 @@ function normSets(log){
   return {d:!!v,r:(i===lastDone?(log.rir||null):null)};
  });
 }
-function exoCard(x,code,w,base){
- var e=EX[x],sid=(code=="H2"||code=="H3")?x+"_"+code:x;
+function prefillKg(sid){
+ if(selW!=9)return null;
+ var l5=getLog(5,sid);
+ if(!l5||!l5.kg)return null;
+ return Math.round((+l5.kg*0.9)/2.5)*2.5;
+}
+function exoCard(x,code,w){
+ var e=EX[x],sid=(code=="H2")?x+"_"+code:x;
  var log=getLog(selW,sid)||{};
  var normed=normSets(log);
  var p=prevLog(selW,sid),hint=progHint(selW,sid);
+ var pf=log.kg?null:prefillKg(sid);
  var h='<div class="hd">';
  h+='<div class="thumb"'+(e.gif?' onclick="this.nextElementSibling.querySelector(\'details\')&&0">':'>')+(e.gif?'<img src="'+GIFS[e.gif]+'">':'<div class="play">pas de<br>gif</div>')+'</div>';
  h+='<div class="ti"><b>'+esc(e.n)+'</b></div><div class="rx">'+e.s+'×'+(e.lo==e.hi?e.lo:e.lo+'-'+e.hi)+(e.leg?' /côté':'')+(e.m?' m':'')+'</div></div>';
@@ -430,9 +437,10 @@ function exoCard(x,code,w,base){
  if(e.note)h+='<div class="exdesc">'+esc(e.note)+'</div>';
  if(p)h+='<div class="prev">S'+p.w+' : '+esc((p.l.kg||"?")+" kg"+(p.l.reps?" × "+p.l.reps:""))+'</div>';
  if(hint)h+='<div class="hint">↑ '+esc(hint)+'</div>';
- h+='<div class="ctrls"><div class="lbl">Charge utilisée</div><div class="chg"><input type="number" step="0.5" inputmode="decimal" placeholder="kg" value="'+(log.kg||"")+'" onchange="setKg(\''+sid+'\',this.value)"><span>kg'+(e.m?' · +'+e.lo+' m':'')+'</span></div>';
+ if(pf!=null)h+='<div class="hint">Repris à 90 % de S5 — ajuste si besoin.</div>';
+ h+='<div class="ctrls"><div class="lbl">Charge utilisée</div><div class="chg"><input type="number" step="0.5" inputmode="decimal" placeholder="kg" value="'+(log.kg||pf||"")+'" onchange="setKg(\''+sid+'\',this.value)"><span>kg'+(e.m?' · +'+e.lo+' m':'')+'</span></div>';
  h+='<div class="lbl">Séries · RIR par série</div><div class="setrows">';
- var nset=(w.n==5?e.s-1:(w.bloc==3&&(base=="A"||base=="C")&&(e.grp=="Dos"||e.grp=="Épaules")?e.s+1:e.s));
+ var nset=e.s+((w.bloc==3&&(x=="curlinc"||x=="tricoh"||x=="ecarte"))?1:0);
  for(var i=0;i<nset;i++){
   var st=normed[i]||{d:false,r:null};
   h+='<div class="setrow"><button class="setd'+(st.d?" on":"")+'" onclick="tglSet(\''+sid+'\','+i+')">'+(i+1)+'</button><div class="rir">';
@@ -461,21 +469,20 @@ function startRest(key,secs){
 function rSession(w){
  var code=view.sess,base=code[0]=="H"?"H":code,s=SESS[base],h="";
  h+='<button class="backln" onclick="view.sess=null;render()">← Semaine '+selW+'</button>';
- if(w.n==5)h+='<div class="banner warn">Semaine allégée : <b>−1 série par exercice</b>, mêmes charges.</div>';
- if(w.bloc==3&&(base=="A"||base=="C"))h+='<div class="banner">Bloc 3 : <b>+1 série</b> sur dos et épaules.</div>';
+ if(w.bloc==3)h+='<div class="banner">Semaines 9-12 : <b>+1 série</b> sur curl incliné (A), extension triceps haltère (B), écarté incliné (C). Dos et épaules inchangés.</div>';
  h+='<div class="card"><div class="pad" style="border-bottom:1px solid var(--line)"><h2>'+esc(s.t)+'</h2><div style="font-size:12.5px;color:var(--mut);margin-top:2px">'+esc(s.sub)+'</div></div>';
  s.ex.forEach(function(x){
   if(typeof x=="string"){
    var e0=EX[x],subKey=lk(selW,x),subOn=e0.remplacement&&ST.subs[subKey],useId=subOn?e0.remplacement.id:x;
-   h+='<div class="exo">'+exoCard(useId,code,w,base);
+   h+='<div class="exo">'+exoCard(useId,code,w);
    if(e0.remplacement)h+='<div class="restrow"><button class="restbtn" onclick="toggleSub(\''+subKey+'\')">'+(subOn?"← Revenir à "+esc(e0.n):"Remplacer par "+esc(EX[e0.remplacement.id].n)+" ("+esc(e0.remplacement.cond)+")")+'</button></div>';
    h+='</div>';
   } else {
    var id1=x.sup[0],id2=x.sup[1];
    h+='<div class="exo supgroup"><div class="ssupbadge">Superset</div>';
-   h+='<div class="exo-inner">'+exoCard(id1,code,w,base)+'</div>';
+   h+='<div class="exo-inner">'+exoCard(id1,code,w)+'</div>';
    h+='<div class="restrow"><button class="restbtn" onclick="startRest(\'rest-'+id1+'\',30)">Repos 30 s → exercice suivant</button><span class="restout" id="restout-rest-'+id1+'"></span></div>';
-   h+='<div class="exo-inner">'+exoCard(id2,code,w,base)+'</div>';
+   h+='<div class="exo-inner">'+exoCard(id2,code,w)+'</div>';
    h+='<div class="restrow"><button class="restbtn" onclick="startRest(\'rest-'+id2+'\','+x.repos_s+')">Repos '+x.repos_s+' s</button><span class="restout" id="restout-rest-'+id2+'"></span></div>';
    if(x.note)h+='<details class="mov"><summary>Note de repli</summary><div class="exdesc">'+esc(x.note)+'</div></details>';
    h+='</div>';
@@ -565,14 +572,14 @@ function expClaude(){
  if(ST.weight.length){var a=ST.weight[ST.weight.length-1],f=ST.weight[0];L.push("Poids : "+a.kg+" kg (départ "+f.kg+" → "+(Math.round((a.kg-f.kg)*10)/10)+" kg)")}
  L.push("");
  (w.sess||[]).forEach(function(code){
-  var codes=code=="H"?["H","H2","H3"]:[code];
+  var codes=code=="H"?["H","H2"]:[code];
   codes.forEach(function(cc){
    var base=cc[0]=="H"?"H":cc,s=SESS[base],lines=[];
-   exList(s).forEach(function(x){x=effId(x);var sid=(cc=="H2"||cc=="H3")?x+"_"+cc:x;var l=getLog(selW,sid);
+   exList(s).forEach(function(x){x=effId(x);var sid=(cc=="H2")?x+"_"+cc:x;var l=getLog(selW,sid);
     if(l&&l.kg){var p=prevLog(selW,sid),diff="";if(p&&p.l.kg&&+l.kg!=+p.l.kg)diff="  ["+(+l.kg>+p.l.kg?"+":"")+(Math.round((l.kg-p.l.kg)*10)/10)+" kg vs S"+p.w+"]";
      var done=normSets(l).filter(function(st){return st.d}),ns=done.length,lastRir=done.length?done[done.length-1].r:null;
      lines.push("  "+EX[x].n+" : "+l.kg+" kg"+(ns?" ("+ns+" séries":"")+(lastRir!=null?", RIR "+lastRir+")":ns?")":"")+diff)}});
-   if(lines.length){L.push("SÉANCE "+(cc=="H"?"BALI 1":cc=="H2"?"BALI 2":cc=="H3"?"BALI 3":cc)+(ST.done[lk(selW,cc)]?" — faite":""));L.push.apply(L,lines);L.push("")}
+   if(lines.length){L.push("SÉANCE "+(cc=="H"?"BALI 1":cc=="H2"?"BALI 2":cc)+(ST.done[lk(selW,cc)]?" — faite":""));L.push.apply(L,lines);L.push("")}
   });
  });
  var runs=ST.runs["w"+selW]||[],nd=0;for(var i=0;i<w.run.c;i++)if(runs[i])nd++;
@@ -618,9 +625,9 @@ function render(){
 }
 function rSessPicker(){
  var w=WEEKS[selW-1],h='<div class="banner">Choisis la séance à ouvrir pour la semaine '+selW+'.</div><div class="card">';
- var list=w.bloc==2?["H","H2","H3"]:w.sess;
+ var list=w.bloc==2?["H","H2"]:w.sess;
  list.forEach(function(code){var base=code[0]=="H"?"H":code,s=SESS[base],done=ST.done[lk(selW,code)];
-  h+='<div class="opencta" style="border-bottom:1px solid var(--line)" onclick="openSess(\''+code+'\')"><div><b>'+esc(s.t)+(code=="H2"?" (2)":code=="H3"?" (3)":"")+'</b><div style="font-size:12px;color:var(--mut)">'+esc(s.sub)+'</div></div><span class="st'+(done?" done":"")+'">'+(done?"✓":"→")+'</span></div>'});
+  h+='<div class="opencta" style="border-bottom:1px solid var(--line)" onclick="openSess(\''+code+'\')"><div><b>'+esc(s.t)+(code=="H2"?" (2)":"")+'</b><div style="font-size:12px;color:var(--mut)">'+esc(s.sub)+'</div></div><span class="st'+(done?" done":"")+'">'+(done?"✓":"→")+'</span></div>'});
  h+='</div>';return h;
 }
 render();
