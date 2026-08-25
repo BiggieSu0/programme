@@ -269,18 +269,18 @@ var SESS = {
 };
 
 var WEEKS = [
- {n:1,d:"17–23 août",bloc:1,ph:"Fondations",sess:["A","B","V"],run:{c:2,t:"8 × (1 min / 2 min marche)"},note:"<b>Trouve tes charges.</b> Arrête chaque série à 3 reps de la fin, partout, isolation comprise. Note tout."},
- {n:2,d:"24–30 août",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"7 × (2 min / 2 min)"},note:"Mêmes charges qu'en S1, +1 rep par série si ça passe. La séance C arrive."},
- {n:3,d:"31 août – 6 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"6 × (3 min / 90 s)"},note:"<b>Cible atteinte.</b> On resserre à 1-2 reps de la fin. Échec autorisé sur la dernière série des exos marqués."},
- {n:4,d:"7–13 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"5 × (5 min / 90 s)"},note:"La semaine la plus lourde du bloc."},
- {n:5,d:"14–18 sept",bloc:1,ph:"Test",dl:true,sess:["A","B","C","V"],run:{c:2,t:"4 × (8 min / 2 min) puis TEST 5 KM"},note:"<b>Semaine complète, pas d’allègement.</b> Test 5 km + photos avant Bali."},
+ {n:1,d:"17–23 août",bloc:1,ph:"Fondations",sess:["A","B","V"],run:{c:2,t:"6 × (2 min / 1 min)"},note:"<b>Trouve tes charges.</b> Arrête chaque série à 3 reps de la fin, partout, isolation comprise. Note tout."},
+ {n:2,d:"24–30 août",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"7 × (2 min / 1 min)"},note:"Mêmes charges qu'en S1, +1 rep par série si ça passe. La séance C arrive."},
+ {n:3,d:"31 août – 6 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"8 × (2 min / 1 min)"},note:"<b>Cible atteinte.</b> On resserre à 1-2 reps de la fin. Échec autorisé sur la dernière série des exos marqués."},
+ {n:4,d:"7–13 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"9 × (2 min / 1 min)"},note:"La semaine la plus lourde du bloc."},
+ {n:5,d:"14–18 sept",bloc:1,ph:"Test",dl:true,sess:["A","B","C","V"],run:{c:2,t:"10 × (2 min / 1 min) puis TEST 5 KM"},note:"<b>Semaine complète, pas d’allègement.</b> Test 5 km + photos avant Bali."},
  {n:6,d:"19–27 sept",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre bord de mer, 20-30 min"},note:"<b>Maintien.</b> Entretien ~2900-3000 kcal, profite. 2 séances, pas plus."},
  {n:7,d:"28 sept – 4 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre — vise le 5 km continu"},note:"Le 5 km continu se joue ici : reposé, plus léger, au niveau de la mer."},
  {n:8,d:"5–11 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre"},note:"Dernière semaine de vacances. Retour dimanche."},
- {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × 25 min continu"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps haltère et écarté incliné. Retour au déficit."},
- {n:10,d:"19–25 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × 25-30 min continu"},note:"Retour aux charges de S5, puis on dépasse."},
- {n:11,d:"26 oct – 1 nov",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × 30 min continu"},note:"Volume maximal du programme."},
- {n:12,d:"2–8 nov",bloc:3,ph:"Bilan",dl:true,sess:["A","B","C","V"],run:{c:2,t:"2 × 30 min + 5 km chrono"},note:"<b>Dernière semaine.</b> Tests, photos, mesures, bilan ensemble."}
+ {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"4 × (5 min / 1 min)"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps haltère et écarté incliné. Retour au déficit."},
+ {n:10,d:"19–25 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"3 × (7 min / 1 min)"},note:"Retour aux charges de S5, puis on dépasse."},
+ {n:11,d:"26 oct – 1 nov",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × (10 min / 1 min)"},note:"Volume maximal du programme."},
+ {n:12,d:"2–8 nov",bloc:3,ph:"Bilan",dl:true,sess:["A","B","C","V"],run:{c:2,t:"5 km continu"},note:"<b>Dernière semaine.</b> Tests, photos, mesures, bilan ensemble."}
 ];
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
@@ -391,8 +391,9 @@ function rCal(){
     +'<div class="opencta" onclick="openSess(\''+code+'\')"><span style="font-size:13px;font-weight:700">Ouvrir la séance</span><span class="st'+(done?" done":"")+'">'+(done?"✓ faite":"→")+'</span></div>'
     +'<div class="miniex">'+mini+'</div></div>';
   } else if(code=="run1"||code=="runL"||code=="runB"){
-   var lbl=code=="run1"?"Course intervalles":code=="runL"?"Course longue":"Courses de la semaine";
-   h+='<div class="daycol rest"><div class="dh"><b>'+esc(day)+'</b><span>'+lbl+'</span></div><div class="restnote">'+esc(w.run.t)+'<br><small style="color:var(--mut2)">coche dans Progression</small></div></div>';
+   var lbl=code=="run1"?"Course intervalles":code=="runL"?"Course facile":"Courses de la semaine";
+   var runTxt=(code=="runL"&&w.bloc!=2)?"Allure facile, conversationnelle. Lendemain de squat + marche du fermier — pas de progression ici.":w.run.t;
+   h+='<div class="daycol rest"><div class="dh"><b>'+esc(day)+'</b><span>'+lbl+'</span></div><div class="restnote">'+esc(runTxt)+'<br><small style="color:var(--mut2)">coche dans Progression</small></div></div>';
   } else if(code=="cours"){
    h+='<div class="daycol rest"><div class="dh"><b>Jeudi</b><span>Cours du prof</span></div><div class="restnote">midi · renfo ou cardio</div></div>';
   } else {
