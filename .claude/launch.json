@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "static",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "C:\\Users\\ABDERR~1.DOU\\AppData\\Local\\Temp\\claude\\C--Users-abderraouf-dous-Documents-programme\\f0ea5427-6b08-4efd-93aa-1e0a430cad82\\scratchpad\\serve.ps1"],
+      "port": 8080
+    }
+  ]
+}
