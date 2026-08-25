@@ -219,7 +219,7 @@ var EX = {
  tv:{n:"Tirage vertical à genoux à la poulie, prise large ou neutre",s:3,lo:8,hi:12,tag:"rir",inc:"+2,5 kg",repos_s:120,gif:"0150",grp:"Dos",note:"À genoux face à la poulie, prise large ou neutre. Étirement complet en haut, épaules qui montent."},
  rowb:{n:"Rowing barre buste penché",s:4,lo:6,hi:10,tag:"rir",inc:"+2,5 kg",barre:true,repos_s:180,gif:"0027",grp:"Dos",note:"1-3 RIR, montée en charge avant."},
  dch:{n:"Développé couché haltères",s:3,lo:8,hi:12,tag:"rir",inc:"+2 kg/haltère",gif:"0025",gifnote:"barre montrée — même trajet, haltères descendent plus bas",grp:"Pecs"},
- rdl:{n:"Soulevé de terre roumain",s:3,lo:8,hi:10,tag:"rir",inc:"+5 kg",barre:true,repos_s:150,gif:"0085",grp:"Ischios",note:"2-3 RIR, hanches en arrière, dos plat, barre le long des cuisses. Charge modérée les 3 premières semaines. Filme-toi de profil au début."},
+ rdl:{n:"Soulevé de terre roumain",s:3,lo:8,hi:10,tag:"rir",inc:"+5 kg",barre:true,repos_s:150,gif:"0085",grp:"Ischios",note:"2-3 RIR, hanches en arrière, dos plat, barre le long des cuisses. Charge modérée les 3 premières semaines. Filme-toi de profil au début.",remplacement:{id:"curlisch",cond:"lombaires fatiguées"}},
  curlinc:{n:"Curl incliné haltères",s:3,lo:8,hi:12,tag:"echec",inc:"+1 kg/haltère",isolation:true,repos_s:90,gif:"0294",gifnote:"version debout montrée — toi, assis incliné, bras derrière le corps",grp:"Biceps",note:"L'étirement du bas fait la différence."},
  facepull:{n:"Face pull",s:3,lo:15,hi:20,tag:"echec",inc:"+2,5 kg",isolation:true,gif:"0203",grp:"Deltoïde postérieur",note:"Corde vers le front, coudes hauts. L'anti-posture-bureau."},
  dcb:{n:"Développé couché barre",s:4,lo:6,hi:10,tag:"rir",inc:"+2,5 kg",barre:true,repos_s:180,gif:"0025",grp:"Pecs",note:"1-3 RIR, montée en charge avant."},
@@ -249,7 +249,7 @@ var EX = {
  oiseauinc:{n:"Oiseau haltères poitrine appuyée sur banc incliné",s:3,lo:12,hi:15,tag:"echec",inc:"+1 kg/haltère",isolation:true,grp:"Deltoïde postérieur",note:"Buste appuyé sur banc incliné à 30-45°, front posé, haltères légers. Bras presque tendus, lève sur les côtés jusqu'à l'horizontale, coudes légèrement fléchis, redescends lentement."},
  tricoc:{n:"Extension triceps poulie au-dessus de la tête, corde, dos à la poulie",s:4,lo:10,hi:15,tag:"echec",inc:"+2,5 kg",isolation:true,repos_s:90,grp:"Triceps",note:"Dos à la poulie haute, corde tenue à deux mains derrière la nuque, coudes hauts et fixes. Étends les bras vers l'avant-haut sans bouger les coudes."},
  curlpb:{n:"Curl poulie basse, bras derrière le corps",s:3,lo:10,hi:12,tag:"echec",inc:"+1 kg",isolation:true,repos_s:90,grp:"Biceps",note:"Poulie basse, dos à l'appareil, bras tendu derrière le corps. Fléchis le coude en gardant le bras derrière toi tout du long — étirement du biceps en position basse."},
- curlisch:{n:"Curl ischios poulie basse, sangle de cheville",s:3,lo:10,hi:15,tag:"rir",inc:"+2,5 kg",grp:"Ischios",note:"Sangle de cheville à la poulie basse, allongé ou en appui, jambe tendue. Fléchis le genou contre la résistance de la poulie, contrôle le retour. Remplacement du RDL si lombaires fatiguées."},
+ curlisch:{n:"Curl ischios poulie basse, sangle de cheville",s:3,lo:10,hi:15,tag:"rir",inc:"+2,5 kg",repos_s:150,grp:"Ischios",note:"Sangle de cheville à la poulie basse, allongé ou en appui, jambe tendue. Fléchis le genou contre la résistance de la poulie, contrôle le retour. Remplacement du RDL si lombaires fatiguées."},
  bpresse:{n:"Presse à cuisses ou goblet squat",s:2,lo:10,hi:10,tag:"rir",inc:"+5 kg",grp:"Jambes",note:"Presse à cuisses (dos calé, pieds largeur épaules) ou goblet squat (haltère contre la poitrine, descente contrôlée, genoux dans l'axe des pieds)."},
  b1:{n:"Tirage vertical",s:2,lo:8,hi:12,tag:"rir",inc:"—",gif:"0150",grp:"Dos"},
  b2:{n:"Développé haltères",s:2,lo:8,hi:12,tag:"rir",inc:"—",gif:"0025",grp:"Pecs"},
@@ -286,7 +286,7 @@ var WEEKS = [
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
 function save(){ST._t=Date.now();try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}queueSync()}
 var ST=load();
-ST.logs=ST.logs||{};ST.done=ST.done||{};ST.valid=ST.valid||{};ST.runs=ST.runs||{};ST.weight=ST.weight||[];ST.notes=ST.notes||{};
+ST.logs=ST.logs||{};ST.done=ST.done||{};ST.valid=ST.valid||{};ST.runs=ST.runs||{};ST.weight=ST.weight||[];ST.notes=ST.notes||{};ST.subs=ST.subs||{};
 
 var syncTimer=null;
 function queueSync(){if(!sb||!authUser)return;clearTimeout(syncTimer);syncTimer=setTimeout(pushRemote,1500)}
@@ -308,7 +308,7 @@ function pullRemote(){
   var remote=r.data&&r.data.data;
   if(remote&&remote._t&&(!ST._t||remote._t>ST._t)){
    ST=remote;
-   ["logs","done","valid","runs","weight","notes"].forEach(function(k){ST[k]=ST[k]||(k=="weight"?[]:{})});
+   ["logs","done","valid","runs","weight","notes","subs"].forEach(function(k){ST[k]=ST[k]||(k=="weight"?[]:{})});
    try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}
    render();
   } else {
@@ -385,7 +385,7 @@ function rCal(){
    if(!av){h+='<div class="daycol rest"><div class="dh"><b>'+esc(day)+'</b><span>'+esc(s.t)+'</span></div><div class="restnote">pas cette semaine — montée en charge</div></div>';return}
    var done=ST.done[lk(selW,code)];
    var mini="",flat=exList(s);
-   flat.slice(0,4).forEach(function(x){var e=EX[x];mini+='<div class="m"><div class="th">'+(e.gif?'<img src="'+GIFS[e.gif]+'">':'')+'</div>'+esc(e.n)+'<span class="rx">'+e.s+'×'+(e.lo==e.hi?e.lo:e.lo+'-'+e.hi)+'</span></div>'});
+   flat.slice(0,4).forEach(function(x){var e=EX[effId(x)];mini+='<div class="m"><div class="th">'+(e.gif?'<img src="'+GIFS[e.gif]+'">':'')+'</div>'+esc(e.n)+'<span class="rx">'+e.s+'×'+(e.lo==e.hi?e.lo:e.lo+'-'+e.hi)+'</span></div>'});
    if(flat.length>4)mini+='<div class="m" style="color:var(--mut2)">+ '+(flat.length-4)+' autres</div>';
    h+='<div class="daycol"><div class="dh"><b>'+esc(day)+'</b><span>'+esc(s.t)+'</span></div>'
     +'<div class="opencta" onclick="openSess(\''+code+'\')"><span style="font-size:13px;font-weight:700">Ouvrir la séance</span><span class="st'+(done?" done":"")+'">'+(done?"✓ faite":"→")+'</span></div>'
@@ -408,6 +408,7 @@ function openSess(code){view.sess=code;view.sec="cal";render();window.scrollTo(0
 
 /* ---- SÉANCE ---- */
 function exList(s){var out=[];s.ex.forEach(function(x){if(typeof x=="string")out.push(x);else out=out.concat(x.sup)});return out}
+function effId(x){var e=EX[x];return (e.remplacement&&ST.subs[lk(selW,x)])?e.remplacement.id:x}
 function normSets(log){
  if(!log||!log.sets)return [];
  var lastDone=-1;
@@ -465,7 +466,10 @@ function rSession(w){
  h+='<div class="card"><div class="pad" style="border-bottom:1px solid var(--line)"><h2>'+esc(s.t)+'</h2><div style="font-size:12.5px;color:var(--mut);margin-top:2px">'+esc(s.sub)+'</div></div>';
  s.ex.forEach(function(x){
   if(typeof x=="string"){
-   h+='<div class="exo">'+exoCard(x,code,w,base)+'</div>';
+   var e0=EX[x],subKey=lk(selW,x),subOn=e0.remplacement&&ST.subs[subKey],useId=subOn?e0.remplacement.id:x;
+   h+='<div class="exo">'+exoCard(useId,code,w,base);
+   if(e0.remplacement)h+='<div class="restrow"><button class="restbtn" onclick="toggleSub(\''+subKey+'\')">'+(subOn?"← Revenir à "+esc(e0.n):"Remplacer par "+esc(EX[e0.remplacement.id].n)+" ("+esc(e0.remplacement.cond)+")")+'</button></div>';
+   h+='</div>';
   } else {
    var id1=x.sup[0],id2=x.sup[1];
    h+='<div class="exo supgroup"><div class="ssupbadge">Superset</div>';
@@ -487,6 +491,7 @@ function setKg(sid,v){var k=ensure(sid);var e=EX[sid.split("_")[0]];ST.logs[k].k
 function setRir(sid,i,r){var k=ensure(sid);var s=normSets(ST.logs[k]);while(s.length<=i)s.push({d:false,r:null});s[i].r=r;ST.logs[k].sets=s;delete ST.logs[k].rir;save();render()}
 function tglSet(sid,i){var k=ensure(sid);var s=normSets(ST.logs[k]);while(s.length<=i)s.push({d:false,r:null});s[i].d=!s[i].d;ST.logs[k].sets=s;delete ST.logs[k].rir;save();render()}
 function tglDone(code){var k=lk(selW,code);if(ST.done[k])delete ST.done[k];else ST.done[k]=true;save();render()}
+function toggleSub(key){if(ST.subs[key])delete ST.subs[key];else ST.subs[key]=true;save();render()}
 
 /* ---- PROGRESSION ---- */
 function spark(vs){if(vs.length<2)return"";var mn=Math.min.apply(0,vs),mx=Math.max.apply(0,vs);if(mx==mn)mx=mn+1;
@@ -516,6 +521,7 @@ function rProg(){
  (WEEKS[selW-1].sess||[]).forEach(function(code){
   if(code=="H")return;
   SESS[code]&&exList(SESS[code]).forEach(function(x){
+   x=effId(x);
    var l=getLog(selW,x);if(l&&l.kg){var p=prevLog(selW,x);var up="";if(p&&p.l.kg&&+l.kg>+p.l.kg)up=' <span class="up">↑</span>';
     var done=normSets(l).filter(function(st){return st.d}),lastRir=done.length?done[done.length-1].r:null;
     rows+='<tr><td>'+esc(EX[x].n)+'</td><td>'+esc(l.kg)+' kg'+up+'</td><td>'+(lastRir!=null?"RIR "+lastRir:"")+'</td></tr>'}
@@ -562,7 +568,7 @@ function expClaude(){
   var codes=code=="H"?["H","H2","H3"]:[code];
   codes.forEach(function(cc){
    var base=cc[0]=="H"?"H":cc,s=SESS[base],lines=[];
-   exList(s).forEach(function(x){var sid=(cc=="H2"||cc=="H3")?x+"_"+cc:x;var l=getLog(selW,sid);
+   exList(s).forEach(function(x){x=effId(x);var sid=(cc=="H2"||cc=="H3")?x+"_"+cc:x;var l=getLog(selW,sid);
     if(l&&l.kg){var p=prevLog(selW,sid),diff="";if(p&&p.l.kg&&+l.kg!=+p.l.kg)diff="  ["+(+l.kg>+p.l.kg?"+":"")+(Math.round((l.kg-p.l.kg)*10)/10)+" kg vs S"+p.w+"]";
      var done=normSets(l).filter(function(st){return st.d}),ns=done.length,lastRir=done.length?done[done.length-1].r:null;
      lines.push("  "+EX[x].n+" : "+l.kg+" kg"+(ns?" ("+ns+" séries":"")+(lastRir!=null?", RIR "+lastRir+")":ns?")":"")+diff)}});
@@ -576,7 +582,7 @@ function expClaude(){
  if(navigator.clipboard)navigator.clipboard.writeText(txt).catch(function(){});
 }
 function expJson(){var b=new Blob([JSON.stringify(ST)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="programme-sauvegarde-"+today()+".json";a.click()}
-function impJson(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d&&d.logs){ST=d;["logs","done","valid","runs","weight","notes"].forEach(function(k){ST[k]=ST[k]||(k=="weight"?[]:{})});save();render();alert("Sauvegarde importée.")}else alert("Fichier non reconnu.")}catch(e){alert("Fichier non reconnu.")}};r.readAsText(f)}
+function impJson(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(d&&d.logs){ST=d;["logs","done","valid","runs","weight","notes","subs"].forEach(function(k){ST[k]=ST[k]||(k=="weight"?[]:{})});save();render();alert("Sauvegarde importée.")}else alert("Fichier non reconnu.")}catch(e){alert("Fichier non reconnu.")}};r.readAsText(f)}
 
 /* ---- BIBLIOTHÈQUE ---- */
 function rLib(){
