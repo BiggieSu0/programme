@@ -28,11 +28,24 @@ quotidiennement sur téléphone à la salle de sport, parfois sur PC. Un seul ut
   - `subs` : substitutions d'exercice actives par semaine, ex. `{"w3:rdl":true}` — active le
     remplacement défini dans `EX[id].remplacement` pour cette semaine-là. Chaque id garde son
     propre historique dans `logs` (aucun log partagé entre un exercice et son remplaçant).
-  - Une entrée de `logs` a la forme `{kg, sets:[{d,r}, ...]}` (`d` = série faite, `r` = RIR de
-    cette série, `"0"|"1"|"2"|"3+"|null`). Les entrées écrites avant la tâche 0.5 utilisent
-    l'ancien format `{kg, rir, sets:[bool, ...]}` (un seul RIR pour la séance) et restent
-    lisibles telles quelles via `normSets()` — ne jamais réécrire l'historique en masse pour
-    les migrer, seule l'édition d'un log précis le fait basculer au nouveau format.
+  - Une entrée de `logs` a la forme `{sets:[{d,kg,reps,r}, ...]}` — par série : `d` faite,
+    `kg` charge, `reps` répétitions, `r` = RIR (`"0"|"1"|"2"|"3+"|null`). Aucun champ `kg`/`rir`
+    global depuis la tâche « poids/reps par série » : `repKg()`/`repReps()` (première série
+    faite) et `lastRir()` (dernière série faite) donnent les valeurs représentatives utilisées
+    par les vues agrégées (table de charges, export, alertes).
+  - Trois générations de format coexistent en lecture, toutes normalisées par `normSets()` —
+    ne jamais réécrire l'historique en masse, seule l'édition d'un log précis le fait
+    basculer au format courant :
+    1. `{kg, rir, sets:[bool, ...]}` (avant RIR par série) — un seul poids et un seul RIR pour
+       toute la séance, le RIR réinjecté sur la dernière série cochée ;
+    2. `{kg, sets:[{d,r}, ...]}` (RIR par série, avant poids/reps par série) — un seul poids
+       pour toute la séance, RIR par série ;
+    3. `{sets:[{d,kg,reps,r}, ...]}` (actuel) — tout par série.
+  - **Pré-remplissage anti-friction** : à l'affichage, une série sans `kg`/`reps` explicite
+    hérite en direct de la série 1 (ou de la série 1 hérite du pré-remplissage 90 % de S5 en
+    semaine 9, cf. `prefillKg()`) — recalculé à chaque rendu, jamais écrit en storage tant que
+    l'utilisateur n'a pas modifié cette série précise. Une fois modifiée, une série garde sa
+    propre valeur même si la série 1 change ensuite.
 - GIF d'exercices : **base64 embarqués dans le JS (~2 Mo)**. Ne pas les dupliquer, ne pas
   les recompresser sans demande, attention à la taille du fichier.
 

@@ -103,17 +103,17 @@ h2{font-size:16px;font-weight:700;letter-spacing:-.2px}
 .hint{margin-top:8px;font-size:12.5px;font-weight:700;color:var(--ok);background:var(--oksoft);border-radius:7px;padding:7px 10px}
 .ctrls{margin-top:11px}
 .lbl{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
-.chg{display:flex;gap:8px;align-items:center;margin-bottom:10px}
-.chg input{width:110px;border:1px solid var(--line);border-radius:9px;padding:9px;background:var(--bg2);
- text-align:center;font-size:15px;font-variant-numeric:tabular-nums}
-.chg input:focus{outline:2px solid var(--acc);outline-offset:-1px}
-.chg span{font-size:12px;color:var(--mut)}
 .setrows{display:flex;flex-direction:column;gap:8px}
-.setrow{display:flex;align-items:center;gap:8px}
-.setd{flex:0 0 36px;width:36px;height:36px;border:1px solid var(--line);background:var(--bg2);
+.setrow{display:flex;flex-direction:column;gap:7px;padding:8px;border:1px solid var(--line);border-radius:9px;background:var(--bg2)}
+.setrow-top{display:flex;align-items:center;gap:7px}
+.setd{flex:0 0 36px;width:36px;height:36px;border:1px solid var(--line);background:var(--card);
  border-radius:8px;font-size:13px;font-weight:700;color:var(--mut);cursor:pointer}
 .setd.on{background:var(--ok);border-color:var(--ok);color:#04140c}
-.setrow .rir{flex:1;margin-bottom:0}
+.setkg,.setreps{flex:1;min-width:0;border:1px solid var(--line);border-radius:7px;padding:8px 4px;
+ background:var(--card);text-align:center;font-size:13.5px;font-variant-numeric:tabular-nums}
+.setkg:focus,.setreps:focus{outline:2px solid var(--acc);outline-offset:-1px}
+.setx{flex:0 0 auto;color:var(--mut2);font-size:12px}
+.setrow .rir{margin-bottom:0}
 .rir{display:flex;gap:6px;margin-bottom:10px}
 .rir button{flex:1;border:1px solid var(--line);background:var(--bg2);border-radius:8px;padding:8px;
  font-size:13px;font-weight:700;color:var(--mut);cursor:pointer}
@@ -121,7 +121,7 @@ h2{font-size:16px;font-weight:700;letter-spacing:-.2px}
 .rir button.danger{border-color:var(--warn)}
 .rir button.danger.on{background:var(--warnsoft);border-color:var(--warn);color:var(--warn)}
 .alertbox{font-size:12px;font-weight:700;color:var(--warn);background:var(--warnsoft);border-radius:7px;
- padding:6px 10px;margin-left:44px}
+ padding:6px 10px}
 details.mov{margin-top:10px}
 details.mov summary{font-size:12px;color:var(--mut);cursor:pointer;list-style:none;display:inline-block;
  border:1px solid var(--line);border-radius:7px;padding:6px 11px;background:var(--card2)}
@@ -346,7 +346,7 @@ var view={sec:"cal",sess:null};
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function lk(w,x){return "w"+w+":"+x}
 function getLog(w,x){return ST.logs[lk(w,x)]||null}
-function prevLog(w,x){for(var i=w-1;i>=1;i--){var l=getLog(i,x);if(l&&(l.kg||l.sets&&l.sets.length))return{w:i,l:l}}return null}
+function prevLog(w,x){for(var i=w-1;i>=1;i--){var l=getLog(i,x);if(l&&l.sets&&l.sets.length)return{w:i,l:l}}return null}
 function progHint(w,x){var p=prevLog(w,x);if(!p||!p.l.hi)return null;var e=EX[x.split("_")[0]];if(p.l.hi){return "Toutes les séries au max en S"+p.w+" → +"+e.inc.replace('+','')+", repars à "+e.lo+" reps"}return null}
 
 /* ---- CALENDRIER ---- */
@@ -415,36 +415,49 @@ function normSets(log){
  var lastDone=-1;
  log.sets.forEach(function(v,i){if(v===true||(v&&typeof v=="object"&&v.d))lastDone=i});
  return log.sets.map(function(v,i){
-  if(v&&typeof v=="object")return v;
-  return {d:!!v,r:(i===lastDone?(log.rir||null):null)};
+  if(v&&typeof v=="object"){
+   return {d:!!v.d,kg:(v.kg!=null?v.kg:(log.kg!=null?log.kg:null)),reps:(v.reps!=null?v.reps:null),r:(v.r!==undefined?v.r:null)};
+  }
+  return {d:!!v,kg:(log.kg!=null?log.kg:null),reps:null,r:(i===lastDone?(log.rir||null):null)};
  });
 }
+function repKg(l){var d=normSets(l).filter(function(s){return s.d&&s.kg!=null});return d.length?d[0].kg:null}
+function repReps(l){var d=normSets(l).filter(function(s){return s.d&&s.reps!=null});return d.length?d[0].reps:null}
+function lastRir(l){var d=normSets(l).filter(function(s){return s.d});return d.length?d[d.length-1].r:null}
 function prefillKg(sid){
  if(selW!=9)return null;
  var l5=getLog(5,sid);
- if(!l5||!l5.kg)return null;
- return Math.round((+l5.kg*0.9)/2.5)*2.5;
+ var k5=l5&&repKg(l5);
+ if(!k5)return null;
+ return Math.round((+k5*0.9)/2.5)*2.5;
 }
 function exoCard(x,code,w){
  var e=EX[x],sid=(code=="H2")?x+"_"+code:x;
  var log=getLog(selW,sid)||{};
  var normed=normSets(log);
  var p=prevLog(selW,sid),hint=progHint(selW,sid);
- var pf=log.kg?null:prefillKg(sid);
+ var pf=prefillKg(sid);
  var h='<div class="hd">';
  h+='<div class="thumb"'+(e.gif?' onclick="this.nextElementSibling.querySelector(\'details\')&&0">':'>')+(e.gif?'<img src="'+GIFS[e.gif]+'">':'<div class="play">pas de<br>gif</div>')+'</div>';
  h+='<div class="ti"><b>'+esc(e.n)+'</b></div><div class="rx">'+e.s+'×'+(e.lo==e.hi?e.lo:e.lo+'-'+e.hi)+(e.leg?' /côté':'')+(e.m?' m':'')+'</div></div>';
  h+='<span class="tag '+e.tag+'">'+(e.tag=="echec"?"échec ok · dernière série":"RIR 1-3 · jamais d’échec")+'</span>';
  if(e.note)h+='<div class="exdesc">'+esc(e.note)+'</div>';
- if(p)h+='<div class="prev">S'+p.w+' : '+esc((p.l.kg||"?")+" kg"+(p.l.reps?" × "+p.l.reps:""))+'</div>';
+ if(p){var pk=repKg(p.l),pr=repReps(p.l);if(pk!=null)h+='<div class="prev">S'+p.w+' : '+esc(pk+" kg"+(pr!=null?" × "+pr:""))+'</div>'}
  if(hint)h+='<div class="hint">↑ '+esc(hint)+'</div>';
- if(pf!=null)h+='<div class="hint">Repris à 90 % de S5 — ajuste si besoin.</div>';
- h+='<div class="ctrls"><div class="lbl">Charge utilisée</div><div class="chg"><input type="number" step="0.5" inputmode="decimal" placeholder="kg" value="'+(log.kg||pf||"")+'" onchange="setKg(\''+sid+'\',this.value)"><span>kg'+(e.m?' · +'+e.lo+' m':'')+'</span></div>';
- h+='<div class="lbl">Séries · RIR par série</div><div class="setrows">';
+ if(pf!=null&&(!normed[0]||normed[0].kg==null))h+='<div class="hint">Repris à 90 % de S5 — ajuste si besoin.</div>';
+ h+='<div class="ctrls"><div class="lbl">Séries — charge, reps, RIR (la série 1 pré-remplit les suivantes)</div><div class="setrows">';
  var nset=e.s+((w.bloc==3&&(x=="curlinc"||x=="tricoh"||x=="ecarte"))?1:0);
+ var eff0kg=(normed[0]&&normed[0].kg!=null)?normed[0].kg:pf;
+ var eff0reps=normed[0]?normed[0].reps:null;
  for(var i=0;i<nset;i++){
-  var st=normed[i]||{d:false,r:null};
-  h+='<div class="setrow"><button class="setd'+(st.d?" on":"")+'" onclick="tglSet(\''+sid+'\','+i+')">'+(i+1)+'</button><div class="rir">';
+  var st=normed[i]||{d:false,kg:null,reps:null,r:null};
+  var dispKg=st.kg!=null?st.kg:(i==0?pf:eff0kg);
+  var dispReps=st.reps!=null?st.reps:(i==0?null:eff0reps);
+  h+='<div class="setrow"><div class="setrow-top"><button class="setd'+(st.d?" on":"")+'" onclick="tglSet(\''+sid+'\','+i+')">'+(i+1)+'</button>'
+   +'<input class="setkg" type="number" step="0.5" inputmode="decimal" placeholder="kg" value="'+(dispKg!=null?dispKg:"")+'" onchange="setSetKg(\''+sid+'\','+i+',this.value)">'
+   +'<span class="setx">×</span>'
+   +'<input class="setreps" type="number" inputmode="numeric" placeholder="'+(e.m?"m":"reps")+'" value="'+(dispReps!=null?dispReps:"")+'" onchange="setSetReps(\''+sid+'\','+i+',this.value)"></div>';
+  h+='<div class="rir">';
   ["0","1","2","3+"].forEach(function(r){h+='<button class="'+(st.r==r?"on":"")+(r=="0"&&e.barre?" danger":"")+'" onclick="setRir(\''+sid+'\','+i+',\''+r+'\')">'+r+'</button>'});
   h+='</div></div>';
   if(st.d&&st.r=="0"&&e.barre)h+='<div class="alertbox">⚠ RIR 0 sur un mouvement à la barre — jamais l’échec ici.</div>';
@@ -494,10 +507,11 @@ function rSession(w){
  return h;
 }
 function ensure(sid){var k=lk(selW,sid);ST.logs[k]=ST.logs[k]||{sets:[]};return k}
-function setKg(sid,v){var k=ensure(sid);var e=EX[sid.split("_")[0]];ST.logs[k].kg=v;
- var reps=[];/* mark hi if user hits top of range — simplified: store nothing here */ save();}
-function setRir(sid,i,r){var k=ensure(sid);var s=normSets(ST.logs[k]);while(s.length<=i)s.push({d:false,r:null});s[i].r=r;ST.logs[k].sets=s;delete ST.logs[k].rir;save();render()}
-function tglSet(sid,i){var k=ensure(sid);var s=normSets(ST.logs[k]);while(s.length<=i)s.push({d:false,r:null});s[i].d=!s[i].d;ST.logs[k].sets=s;delete ST.logs[k].rir;save();render()}
+function promoteSets(k,i){var s=normSets(ST.logs[k]);while(s.length<=i)s.push({d:false,kg:null,reps:null,r:null});ST.logs[k].sets=s;delete ST.logs[k].rir;delete ST.logs[k].kg;return s}
+function setRir(sid,i,r){var k=ensure(sid);var s=promoteSets(k,i);s[i].r=r;save();render()}
+function tglSet(sid,i){var k=ensure(sid);var s=promoteSets(k,i);s[i].d=!s[i].d;save();render()}
+function setSetKg(sid,i,v){var k=ensure(sid);var s=promoteSets(k,i);s[i].kg=v===""?null:v;save();render()}
+function setSetReps(sid,i,v){var k=ensure(sid);var s=promoteSets(k,i);s[i].reps=v===""?null:v;save();render()}
 function tglDone(code){var k=lk(selW,code);if(ST.done[k])delete ST.done[k];else ST.done[k]=true;save();render()}
 function toggleSub(key){if(ST.subs[key])delete ST.subs[key];else ST.subs[key]=true;save();render()}
 
@@ -527,7 +541,7 @@ function detectAlerts(){
  Object.keys(EX).forEach(function(x){
   if(EX[x].retired||x[0]=="b"||!EX[x].grp)return;
   var pts=[];
-  for(var w=1;w<=selW;w++){var l=getLog(w,x);if(l&&l.kg)pts.push(+l.kg)}
+  for(var w=1;w<=selW;w++){var l=getLog(w,x),k=l&&repKg(l);if(k)pts.push(+k)}
   var n=pts.length;
   if(n>=3&&pts[n-1]<pts[n-2]&&pts[n-2]<pts[n-3])declining.push(EX[x].n);
  });
@@ -542,7 +556,7 @@ function spark(vs){if(vs.length<2)return"";var mn=Math.min.apply(0,vs),mx=Math.m
  return '<svg class="spark" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><polyline fill="none" stroke="#3d8bff" stroke-width="2" points="'+pts.join(" ")+'"/></svg>'}
 function rProg(){
  var nv=Object.keys(ST.valid).length;
- var ncharge=0;Object.keys(ST.logs).forEach(function(k){if(ST.logs[k].kg)ncharge++});
+ var ncharge=0;Object.keys(ST.logs).forEach(function(k){if(repKg(ST.logs[k]))ncharge++});
  var last=ST.weight.length?ST.weight[ST.weight.length-1]:null,first=ST.weight.length?ST.weight[0]:null;
  var diff=(last&&first)?(Math.round((last.kg-first.kg)*10)/10):null;
  var h='<div class="banner">Valide chaque semaine dans le calendrier et note tes charges pendant les séances : tout se remplit ici.</div>';
@@ -575,12 +589,12 @@ function rProg(){
   if(code=="H")return;
   SESS[code]&&exList(SESS[code]).forEach(function(x){
    x=effId(x);
-   var l=getLog(selW,x);if(l&&l.kg){var p=prevLog(selW,x);var up="";if(p&&p.l.kg&&+l.kg>+p.l.kg)up=' <span class="up">↑</span>';
-    var done=normSets(l).filter(function(st){return st.d}),lastRir=done.length?done[done.length-1].r:null;
-    rows+='<tr><td>'+esc(EX[x].n)+'</td><td>'+esc(l.kg)+' kg'+up+'</td><td>'+(lastRir!=null?"RIR "+lastRir:"")+'</td></tr>'}
+   var l=getLog(selW,x),rk=l&&repKg(l);if(rk){var p=prevLog(selW,x),pk=p&&repKg(p.l);var up="";if(pk&&+rk>+pk)up=' <span class="up">↑</span>';
+    var rir=lastRir(l);
+    rows+='<tr><td>'+esc(EX[x].n)+'</td><td>'+esc(rk)+' kg'+up+'</td><td>'+(rir!=null?"RIR "+rir:"")+'</td></tr>'}
   });
  });
- h+= rows?'<table class="ctable"><tr><th>Exercice</th><th>Charge</th><th>RIR</th></tr>'+rows+'</table>':'<div style="font-size:13px;color:var(--mut2)">Aucune charge notée cette semaine. Remplis « Charge utilisée » dans tes séances.</div>';
+ h+= rows?'<table class="ctable"><tr><th>Exercice</th><th>Charge</th><th>RIR</th></tr>'+rows+'</table>':'<div style="font-size:13px;color:var(--mut2)">Aucune charge notée cette semaine. Remplis la charge et les reps de la série 1 dans tes séances.</div>';
  h+='</div></div>';
  // volume hebdo par groupe (0.10)
  h+='<div class="card"><div class="pad"><h2>Volume hebdomadaire</h2>';
@@ -638,10 +652,10 @@ function expClaude(){
   var codes=code=="H"?["H","H2"]:[code];
   codes.forEach(function(cc){
    var base=cc[0]=="H"?"H":cc,s=SESS[base],lines=[];
-   exList(s).forEach(function(x){x=effId(x);var sid=(cc=="H2")?x+"_"+cc:x;var l=getLog(selW,sid);
-    if(l&&l.kg){var p=prevLog(selW,sid),diff="";if(p&&p.l.kg&&+l.kg!=+p.l.kg)diff="  ["+(+l.kg>+p.l.kg?"+":"")+(Math.round((l.kg-p.l.kg)*10)/10)+" kg vs S"+p.w+"]";
-     var done=normSets(l).filter(function(st){return st.d}),ns=done.length,lastRir=done.length?done[done.length-1].r:null;
-     lines.push("  "+EX[x].n+" : "+l.kg+" kg"+(ns?" ("+ns+" séries":"")+(lastRir!=null?", RIR "+lastRir+")":ns?")":"")+diff)}});
+   exList(s).forEach(function(x){x=effId(x);var sid=(cc=="H2")?x+"_"+cc:x;var l=getLog(selW,sid),rk=l&&repKg(l);
+    if(rk){var p=prevLog(selW,sid),pk=p&&repKg(p.l),diff="";if(pk&&+rk!=+pk)diff="  ["+(+rk>+pk?"+":"")+(Math.round((rk-pk)*10)/10)+" kg vs S"+p.w+"]";
+     var ns=normSets(l).filter(function(st){return st.d}).length,rir=lastRir(l);
+     lines.push("  "+EX[x].n+" : "+rk+" kg"+(ns?" ("+ns+" séries":"")+(rir!=null?", RIR "+rir+")":ns?")":"")+diff)}});
    if(lines.length){L.push("SÉANCE "+(cc=="H"?"BALI 1":cc=="H2"?"BALI 2":cc)+(ST.done[lk(selW,cc)]?" — faite":""));L.push.apply(L,lines);L.push("")}
   });
  });
