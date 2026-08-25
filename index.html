@@ -108,14 +108,20 @@ h2{font-size:16px;font-weight:700;letter-spacing:-.2px}
  text-align:center;font-size:15px;font-variant-numeric:tabular-nums}
 .chg input:focus{outline:2px solid var(--acc);outline-offset:-1px}
 .chg span{font-size:12px;color:var(--mut)}
+.setrows{display:flex;flex-direction:column;gap:8px}
+.setrow{display:flex;align-items:center;gap:8px}
+.setd{flex:0 0 36px;width:36px;height:36px;border:1px solid var(--line);background:var(--bg2);
+ border-radius:8px;font-size:13px;font-weight:700;color:var(--mut);cursor:pointer}
+.setd.on{background:var(--ok);border-color:var(--ok);color:#04140c}
+.setrow .rir{flex:1;margin-bottom:0}
 .rir{display:flex;gap:6px;margin-bottom:10px}
 .rir button{flex:1;border:1px solid var(--line);background:var(--bg2);border-radius:8px;padding:8px;
  font-size:13px;font-weight:700;color:var(--mut);cursor:pointer}
 .rir button.on{background:var(--accsoft);border-color:var(--acc);color:#8fbcff}
-.sets{display:flex;gap:6px;flex-wrap:wrap}
-.sets button{flex:0 0 auto;width:42px;height:40px;border:1px solid var(--line);background:var(--bg2);
- border-radius:8px;font-size:14px;font-weight:700;color:var(--mut);cursor:pointer}
-.sets button.on{background:var(--ok);border-color:var(--ok);color:#04140c}
+.rir button.danger{border-color:var(--warn)}
+.rir button.danger.on{background:var(--warnsoft);border-color:var(--warn);color:var(--warn)}
+.alertbox{font-size:12px;font-weight:700;color:var(--warn);background:var(--warnsoft);border-radius:7px;
+ padding:6px 10px;margin-left:44px}
 details.mov{margin-top:10px}
 details.mov summary{font-size:12px;color:var(--mut);cursor:pointer;list-style:none;display:inline-block;
  border:1px solid var(--line);border-radius:7px;padding:6px 11px;background:var(--card2)}
@@ -402,10 +408,19 @@ function openSess(code){view.sess=code;view.sec="cal";render();window.scrollTo(0
 
 /* ---- SÉANCE ---- */
 function exList(s){var out=[];s.ex.forEach(function(x){if(typeof x=="string")out.push(x);else out=out.concat(x.sup)});return out}
+function normSets(log){
+ if(!log||!log.sets)return [];
+ var lastDone=-1;
+ log.sets.forEach(function(v,i){if(v===true||(v&&typeof v=="object"&&v.d))lastDone=i});
+ return log.sets.map(function(v,i){
+  if(v&&typeof v=="object")return v;
+  return {d:!!v,r:(i===lastDone?(log.rir||null):null)};
+ });
+}
 function exoCard(x,code,w,base){
  var e=EX[x],sid=(code=="H2"||code=="H3")?x+"_"+code:x;
  var log=getLog(selW,sid)||{};
- var sets=log.sets||[];
+ var normed=normSets(log);
  var p=prevLog(selW,sid),hint=progHint(selW,sid);
  var h='<div class="hd">';
  h+='<div class="thumb"'+(e.gif?' onclick="this.nextElementSibling.querySelector(\'details\')&&0">':'>')+(e.gif?'<img src="'+GIFS[e.gif]+'">':'<div class="play">pas de<br>gif</div>')+'</div>';
@@ -415,12 +430,16 @@ function exoCard(x,code,w,base){
  if(p)h+='<div class="prev">S'+p.w+' : '+esc((p.l.kg||"?")+" kg"+(p.l.reps?" × "+p.l.reps:""))+'</div>';
  if(hint)h+='<div class="hint">↑ '+esc(hint)+'</div>';
  h+='<div class="ctrls"><div class="lbl">Charge utilisée</div><div class="chg"><input type="number" step="0.5" inputmode="decimal" placeholder="kg" value="'+(log.kg||"")+'" onchange="setKg(\''+sid+'\',this.value)"><span>kg'+(e.m?' · +'+e.lo+' m':'')+'</span></div>';
- h+='<div class="lbl">Reps en réserve (dernière série)</div><div class="rir">';
- ["0","1","2","3+"].forEach(function(r){h+='<button class="'+(log.rir==r?"on":"")+'" onclick="setRir(\''+sid+'\',\''+r+'\')">'+r+'</button>'});
- h+='</div><div class="lbl">Séries faites</div><div class="sets">';
+ h+='<div class="lbl">Séries · RIR par série</div><div class="setrows">';
  var nset=(w.n==5?e.s-1:(w.bloc==3&&(base=="A"||base=="C")&&(e.grp=="Dos"||e.grp=="Épaules")?e.s+1:e.s));
- for(var i=0;i<nset;i++)h+='<button class="'+(sets[i]?"on":"")+'" onclick="tglSet(\''+sid+'\','+i+')">'+(i+1)+'</button>';
- h+='</div>';
+ for(var i=0;i<nset;i++){
+  var st=normed[i]||{d:false,r:null};
+  h+='<div class="setrow"><button class="setd'+(st.d?" on":"")+'" onclick="tglSet(\''+sid+'\','+i+')">'+(i+1)+'</button><div class="rir">';
+  ["0","1","2","3+"].forEach(function(r){h+='<button class="'+(st.r==r?"on":"")+(r=="0"&&e.barre?" danger":"")+'" onclick="setRir(\''+sid+'\','+i+',\''+r+'\')">'+r+'</button>'});
+  h+='</div></div>';
+  if(st.d&&st.r=="0"&&e.barre)h+='<div class="alertbox">⚠ RIR 0 sur un mouvement à la barre — jamais l’échec ici.</div>';
+ }
+ h+='</div></div>';
  if(e.repos_s)h+='<div class="restrow"><button class="restbtn" onclick="startRest(\''+sid+'\','+e.repos_s+')">Repos '+e.repos_s+' s</button><span class="restout" id="restout-'+sid+'"></span></div>';
  if(e.gif)h+='<details class="mov"><summary>Voir le mouvement</summary><img loading="lazy" src="'+GIFS[e.gif]+'">'+(e.gifnote?'<div class="exdesc">'+esc(e.gifnote)+'</div>':'')+'</details>';
  return h;
@@ -465,10 +484,8 @@ function rSession(w){
 function ensure(sid){var k=lk(selW,sid);ST.logs[k]=ST.logs[k]||{sets:[]};return k}
 function setKg(sid,v){var k=ensure(sid);var e=EX[sid.split("_")[0]];ST.logs[k].kg=v;
  var reps=[];/* mark hi if user hits top of range — simplified: store nothing here */ save();}
-function setRir(sid,r){var k=ensure(sid);ST.logs[k].rir=r;save();render()}
-function tglSet(sid,i){var k=ensure(sid);var s=ST.logs[k].sets;while(s.length<=i)s.push(false);s[i]=!s[i];
- // auto-flag "hi" if all sets done and rir<=1 (heuristic for progression)
- save();render()}
+function setRir(sid,i,r){var k=ensure(sid);var s=normSets(ST.logs[k]);while(s.length<=i)s.push({d:false,r:null});s[i].r=r;ST.logs[k].sets=s;delete ST.logs[k].rir;save();render()}
+function tglSet(sid,i){var k=ensure(sid);var s=normSets(ST.logs[k]);while(s.length<=i)s.push({d:false,r:null});s[i].d=!s[i].d;ST.logs[k].sets=s;delete ST.logs[k].rir;save();render()}
 function tglDone(code){var k=lk(selW,code);if(ST.done[k])delete ST.done[k];else ST.done[k]=true;save();render()}
 
 /* ---- PROGRESSION ---- */
@@ -500,7 +517,8 @@ function rProg(){
   if(code=="H")return;
   SESS[code]&&exList(SESS[code]).forEach(function(x){
    var l=getLog(selW,x);if(l&&l.kg){var p=prevLog(selW,x);var up="";if(p&&p.l.kg&&+l.kg>+p.l.kg)up=' <span class="up">↑</span>';
-    rows+='<tr><td>'+esc(EX[x].n)+'</td><td>'+esc(l.kg)+' kg'+up+'</td><td>'+(l.rir!==undefined?"RIR "+l.rir:"")+'</td></tr>'}
+    var done=normSets(l).filter(function(st){return st.d}),lastRir=done.length?done[done.length-1].r:null;
+    rows+='<tr><td>'+esc(EX[x].n)+'</td><td>'+esc(l.kg)+' kg'+up+'</td><td>'+(lastRir!=null?"RIR "+lastRir:"")+'</td></tr>'}
   });
  });
  h+= rows?'<table class="ctable"><tr><th>Exercice</th><th>Charge</th><th>RIR</th></tr>'+rows+'</table>':'<div style="font-size:13px;color:var(--mut2)">Aucune charge notée cette semaine. Remplis « Charge utilisée » dans tes séances.</div>';
@@ -546,8 +564,8 @@ function expClaude(){
    var base=cc[0]=="H"?"H":cc,s=SESS[base],lines=[];
    exList(s).forEach(function(x){var sid=(cc=="H2"||cc=="H3")?x+"_"+cc:x;var l=getLog(selW,sid);
     if(l&&l.kg){var p=prevLog(selW,sid),diff="";if(p&&p.l.kg&&+l.kg!=+p.l.kg)diff="  ["+(+l.kg>+p.l.kg?"+":"")+(Math.round((l.kg-p.l.kg)*10)/10)+" kg vs S"+p.w+"]";
-     var ns=(l.sets||[]).filter(Boolean).length;
-     lines.push("  "+EX[x].n+" : "+l.kg+" kg"+(ns?" ("+ns+" séries":"")+(l.rir!==undefined?", RIR "+l.rir+")":ns?")":"")+diff)}});
+     var done=normSets(l).filter(function(st){return st.d}),ns=done.length,lastRir=done.length?done[done.length-1].r:null;
+     lines.push("  "+EX[x].n+" : "+l.kg+" kg"+(ns?" ("+ns+" séries":"")+(lastRir!=null?", RIR "+lastRir+")":ns?")":"")+diff)}});
    if(lines.length){L.push("SÉANCE "+(cc=="H"?"BALI 1":cc=="H2"?"BALI 2":cc=="H3"?"BALI 3":cc)+(ST.done[lk(selW,cc)]?" — faite":""));L.push.apply(L,lines);L.push("")}
   });
  });
