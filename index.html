@@ -245,8 +245,8 @@ var EX = {
 };
 
 var SESS = {
- A:{t:"Dos + biceps",sub:"Lundi midi · salle du boulot, 55 min",ex:["rowb","tv","curlinc","marteau","facepull"]},
- B:{t:"Pecs + épaules + triceps",sub:"Mardi midi · salle du boulot, 55 min",ex:["dcb","dih","lat","tricoh"]},
+ A:{t:"Dos + biceps",sub:"Mardi midi · salle du boulot, 47 min",ex:["rowb","tv","curlinc","marteau","facepull"]},
+ B:{t:"Pecs + épaules + triceps",sub:"Lundi midi · salle du boulot, 47 min",ex:["dcb","dih","lat","tricoh"]},
  C:{t:"Épaules, bras, rappel",sub:"Mercredi soir · maison, 75 min",ex:["dmh","latc","ecarte","tripd","curlp","tvsup","bulg","abs"]},
  V:{t:"Séance longue",sub:"Vendredi · maison, 90 min",ex:["rowlourd","dmb","dips","pull","latlourd","shrug","squat","farmer","abs"]},
  H:{t:"Séance Bali — full body",sub:"2 à 3× / semaine · charges d'entretien, RIR 2-3",ex:["b1","b2","b3","b4","b5","b6","b7"]}
@@ -359,7 +359,7 @@ function rCal(){
  h+='<div class="days">';
  var layout;
  if(w.bloc==2){layout=[["Séance 1","H"],["Séance 2","H2"],["Séance 3","H3"],["Course","runB"]];}
- else{layout=[["Lundi","A"],["Mardi","B"],["Mardi soir","run1"],["Mercredi","C"],["Jeudi","cours"],["Vendredi","V"],["Samedi","runL"],["Dimanche","rest"]];}
+ else{layout=[["Lundi","B"],["Mardi","A"],["Mardi soir","run1"],["Mercredi","C"],["Jeudi","cours"],["Vendredi","V"],["Samedi","runL"],["Dimanche","rest"]];}
  layout.forEach(function(dd){
   var day=dd[0],code=dd[1];
   if(["A","B","C","V","H","H2","H3"].indexOf(code)>=0){
