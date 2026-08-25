@@ -123,6 +123,10 @@ details.mov summary::-webkit-details-marker{display:none}
 details.mov img{margin-top:9px;border-radius:10px;max-width:300px;background:#0f1420}
 .ssupbadge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--acc);
  background:var(--accsoft);border-radius:5px;padding:3px 9px;margin:2px 0 6px}
+.exo-inner{margin-bottom:4px}
+.restrow{display:flex;align-items:center;gap:10px;margin:4px 0 14px;padding:9px 11px;background:var(--card2);border-radius:9px}
+.restbtn{border:1px solid var(--line);background:var(--bg2);color:var(--ink);border-radius:7px;padding:7px 11px;font-size:12.5px;font-weight:700;cursor:pointer}
+.restout{font-size:13px;color:var(--acc);font-variant-numeric:tabular-nums;font-weight:800}
 
 /* progression */
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
@@ -251,10 +255,10 @@ var EX = {
 };
 
 var SESS = {
- A:{t:"Dos + biceps",sub:"Mardi midi · salle du boulot, 47 min",ex:["rowb","tv","curlinc","marteau","facepull"]},
+ A:{t:"Dos + biceps",sub:"Mardi midi · salle du boulot, 47 min",ex:["rowb","tv","curlinc",{sup:["marteau","facepull"],repos_s:60,note:"Si la poulie est loin des haltères : fais 4a puis 4b en séries normales, avec 60 s de repos."}]},
  B:{t:"Pecs + épaules + triceps",sub:"Lundi midi · salle du boulot, 47 min",ex:["dcb","dih","lat","tricoh"]},
  C:{t:"Ischios, rappel dos, bras, rappel pecs/épaules",sub:"Mercredi soir · maison, 70 min",ex:["rdl","tvsup","tricoc","curlpb","ecarte","latc","abs"]},
- V:{t:"Dos, épaules, pecs, jambes",sub:"Vendredi · maison, 88 min",ex:["rowhinc","dmb","dips","squat","pull","oiseauinc","farmer","abs"]},
+ V:{t:"Dos, épaules, pecs, jambes",sub:"Vendredi · maison, 88 min",ex:["rowhinc","dmb","dips","squat",{sup:["pull","oiseauinc"],repos_s:75},"farmer","abs"]},
  H:{t:"Full body entretien",sub:"2× / semaine · maison ou salle, ~45 min · tout à 2 RIR",ex:["bpresse","b2","b3","b1","b6","b7"]}
 };
 
@@ -374,9 +378,9 @@ function rCal(){
    var s=SESS[base];
    if(!av){h+='<div class="daycol rest"><div class="dh"><b>'+esc(day)+'</b><span>'+esc(s.t)+'</span></div><div class="restnote">pas cette semaine — montée en charge</div></div>';return}
    var done=ST.done[lk(selW,code)];
-   var mini="";
-   s.ex.slice(0,4).forEach(function(x){var e=EX[x];mini+='<div class="m"><div class="th">'+(e.gif?'<img src="'+GIFS[e.gif]+'">':'')+'</div>'+esc(e.n)+'<span class="rx">'+e.s+'×'+(e.lo==e.hi?e.lo:e.lo+'-'+e.hi)+'</span></div>'});
-   if(s.ex.length>4)mini+='<div class="m" style="color:var(--mut2)">+ '+(s.ex.length-4)+' autres</div>';
+   var mini="",flat=exList(s);
+   flat.slice(0,4).forEach(function(x){var e=EX[x];mini+='<div class="m"><div class="th">'+(e.gif?'<img src="'+GIFS[e.gif]+'">':'')+'</div>'+esc(e.n)+'<span class="rx">'+e.s+'×'+(e.lo==e.hi?e.lo:e.lo+'-'+e.hi)+'</span></div>'});
+   if(flat.length>4)mini+='<div class="m" style="color:var(--mut2)">+ '+(flat.length-4)+' autres</div>';
    h+='<div class="daycol"><div class="dh"><b>'+esc(day)+'</b><span>'+esc(s.t)+'</span></div>'
     +'<div class="opencta" onclick="openSess(\''+code+'\')"><span style="font-size:13px;font-weight:700">Ouvrir la séance</span><span class="st'+(done?" done":"")+'">'+(done?"✓ faite":"→")+'</span></div>'
     +'<div class="miniex">'+mini+'</div></div>';
@@ -397,6 +401,42 @@ function tglValid(){var k="w"+selW;if(ST.valid[k])delete ST.valid[k];else ST.val
 function openSess(code){view.sess=code;view.sec="cal";render();window.scrollTo(0,0)}
 
 /* ---- SÉANCE ---- */
+function exList(s){var out=[];s.ex.forEach(function(x){if(typeof x=="string")out.push(x);else out=out.concat(x.sup)});return out}
+function exoCard(x,code,w,base){
+ var e=EX[x],sid=(code=="H2"||code=="H3")?x+"_"+code:x;
+ var log=getLog(selW,sid)||{};
+ var sets=log.sets||[];
+ var p=prevLog(selW,sid),hint=progHint(selW,sid);
+ var h='<div class="hd">';
+ h+='<div class="thumb"'+(e.gif?' onclick="this.nextElementSibling.querySelector(\'details\')&&0">':'>')+(e.gif?'<img src="'+GIFS[e.gif]+'">':'<div class="play">pas de<br>gif</div>')+'</div>';
+ h+='<div class="ti"><b>'+esc(e.n)+'</b></div><div class="rx">'+e.s+'×'+(e.lo==e.hi?e.lo:e.lo+'-'+e.hi)+(e.leg?' /côté':'')+(e.m?' m':'')+'</div></div>';
+ h+='<span class="tag '+e.tag+'">'+(e.tag=="echec"?"échec ok · dernière série":"RIR 1-3 · jamais d’échec")+'</span>';
+ if(e.note)h+='<div class="exdesc">'+esc(e.note)+'</div>';
+ if(p)h+='<div class="prev">S'+p.w+' : '+esc((p.l.kg||"?")+" kg"+(p.l.reps?" × "+p.l.reps:""))+'</div>';
+ if(hint)h+='<div class="hint">↑ '+esc(hint)+'</div>';
+ h+='<div class="ctrls"><div class="lbl">Charge utilisée</div><div class="chg"><input type="number" step="0.5" inputmode="decimal" placeholder="kg" value="'+(log.kg||"")+'" onchange="setKg(\''+sid+'\',this.value)"><span>kg'+(e.m?' · +'+e.lo+' m':'')+'</span></div>';
+ h+='<div class="lbl">Reps en réserve (dernière série)</div><div class="rir">';
+ ["0","1","2","3+"].forEach(function(r){h+='<button class="'+(log.rir==r?"on":"")+'" onclick="setRir(\''+sid+'\',\''+r+'\')">'+r+'</button>'});
+ h+='</div><div class="lbl">Séries faites</div><div class="sets">';
+ var nset=(w.n==5?e.s-1:(w.bloc==3&&(base=="A"||base=="C")&&(e.grp=="Dos"||e.grp=="Épaules")?e.s+1:e.s));
+ for(var i=0;i<nset;i++)h+='<button class="'+(sets[i]?"on":"")+'" onclick="tglSet(\''+sid+'\','+i+')">'+(i+1)+'</button>';
+ h+='</div>';
+ if(e.gif)h+='<details class="mov"><summary>Voir le mouvement</summary><img loading="lazy" src="'+GIFS[e.gif]+'">'+(e.gifnote?'<div class="exdesc">'+esc(e.gifnote)+'</div>':'')+'</details>';
+ return h;
+}
+var restTimers={};
+function startRest(key,secs){
+ clearInterval(restTimers[key]);
+ var end=Date.now()+secs*1000;
+ function tick(){
+  var left=Math.max(0,Math.round((end-Date.now())/1000));
+  var el=document.getElementById('restout-'+key);
+  if(el)el.textContent=left>0?(left+' s'):'C’est reparti !';
+  if(left<=0){clearInterval(restTimers[key]);if(navigator.vibrate)navigator.vibrate(200)}
+ }
+ restTimers[key]=setInterval(tick,250);
+ tick();
+}
 function rSession(w){
  var code=view.sess,base=code[0]=="H"?"H":code,s=SESS[base],h="";
  h+='<button class="backln" onclick="view.sess=null;render()">← Semaine '+selW+'</button>';
@@ -404,26 +444,18 @@ function rSession(w){
  if(w.bloc==3&&(base=="A"||base=="C"))h+='<div class="banner">Bloc 3 : <b>+1 série</b> sur dos et épaules.</div>';
  h+='<div class="card"><div class="pad" style="border-bottom:1px solid var(--line)"><h2>'+esc(s.t)+'</h2><div style="font-size:12.5px;color:var(--mut);margin-top:2px">'+esc(s.sub)+'</div></div>';
  s.ex.forEach(function(x){
-  var e=EX[x],sid=(code=="H2"||code=="H3")?x+"_"+code:x;
-  var log=getLog(selW,sid)||{};
-  var sets=log.sets||[];
-  var p=prevLog(selW,sid),hint=progHint(selW,sid);
-  h+='<div class="exo"><div class="hd">';
-  h+='<div class="thumb"'+(e.gif?' onclick="this.nextElementSibling.querySelector(\'details\')&&0">':'>')+(e.gif?'<img src="'+GIFS[e.gif]+'">':'<div class="play">pas de<br>gif</div>')+'</div>';
-  h+='<div class="ti"><b>'+esc(e.n)+'</b></div><div class="rx">'+e.s+'×'+(e.lo==e.hi?e.lo:e.lo+'-'+e.hi)+(e.leg?' /côté':'')+(e.m?' m':'')+'</div></div>';
-  h+='<span class="tag '+e.tag+'">'+(e.tag=="echec"?"échec ok · dernière série":"RIR 1-3 · jamais d\u2019échec")+'</span>';
-  if(e.note)h+='<div class="exdesc">'+esc(e.note)+'</div>';
-  if(p)h+='<div class="prev">S'+p.w+' : '+esc((p.l.kg||"?")+" kg"+(p.l.reps?" × "+p.l.reps:""))+'</div>';
-  if(hint)h+='<div class="hint">↑ '+esc(hint)+'</div>';
-  h+='<div class="ctrls"><div class="lbl">Charge utilisée</div><div class="chg"><input type="number" step="0.5" inputmode="decimal" placeholder="kg" value="'+(log.kg||"")+'" onchange="setKg(\''+sid+'\',this.value)"><span>kg'+(e.m?' · +'+e.lo+' m':'')+'</span></div>';
-  h+='<div class="lbl">Reps en réserve (dernière série)</div><div class="rir">';
-  ["0","1","2","3+"].forEach(function(r){h+='<button class="'+(log.rir==r?"on":"")+'" onclick="setRir(\''+sid+'\',\''+r+'\')">'+r+'</button>'});
-  h+='</div><div class="lbl">Séries faites</div><div class="sets">';
-  var nset=(w.n==5?e.s-1:(w.bloc==3&&(base=="A"||base=="C")&&(e.grp=="Dos"||e.grp=="Épaules")?e.s+1:e.s));
-  for(var i=0;i<nset;i++)h+='<button class="'+(sets[i]?"on":"")+'" onclick="tglSet(\''+sid+'\','+i+')">'+(i+1)+'</button>';
-  h+='</div>';
-  if(e.gif)h+='<details class="mov"><summary>Voir le mouvement</summary><img loading="lazy" src="'+GIFS[e.gif]+'">'+(e.gifnote?'<div class="exdesc">'+esc(e.gifnote)+'</div>':'')+'</details>';
-  h+='</div></div>';
+  if(typeof x=="string"){
+   h+='<div class="exo">'+exoCard(x,code,w,base)+'</div>';
+  } else {
+   var id1=x.sup[0],id2=x.sup[1];
+   h+='<div class="exo supgroup"><div class="ssupbadge">Superset</div>';
+   h+='<div class="exo-inner">'+exoCard(id1,code,w,base)+'</div>';
+   h+='<div class="restrow"><button class="restbtn" onclick="startRest(\'rest-'+id1+'\',30)">Repos 30 s → exercice suivant</button><span class="restout" id="restout-rest-'+id1+'"></span></div>';
+   h+='<div class="exo-inner">'+exoCard(id2,code,w,base)+'</div>';
+   h+='<div class="restrow"><button class="restbtn" onclick="startRest(\'rest-'+id2+'\','+x.repos_s+')">Repos '+x.repos_s+' s</button><span class="restout" id="restout-rest-'+id2+'"></span></div>';
+   if(x.note)h+='<details class="mov"><summary>Note de repli</summary><div class="exdesc">'+esc(x.note)+'</div></details>';
+   h+='</div>';
+  }
  });
  h+='<div class="pad"><button class="vbtn'+(ST.done[lk(selW,code)]?" on":"")+'" style="width:100%" onclick="tglDone(\''+code+'\')">'+(ST.done[lk(selW,code)]?"✓ Séance faite":"Marquer la séance faite")+'</button></div>';
  h+='</div>';
@@ -465,7 +497,7 @@ function rProg(){
  var rows="";
  (WEEKS[selW-1].sess||[]).forEach(function(code){
   if(code=="H")return;
-  SESS[code]&&SESS[code].ex.forEach(function(x){
+  SESS[code]&&exList(SESS[code]).forEach(function(x){
    var l=getLog(selW,x);if(l&&l.kg){var p=prevLog(selW,x);var up="";if(p&&p.l.kg&&+l.kg>+p.l.kg)up=' <span class="up">↑</span>';
     rows+='<tr><td>'+esc(EX[x].n)+'</td><td>'+esc(l.kg)+' kg'+up+'</td><td>'+(l.rir!==undefined?"RIR "+l.rir:"")+'</td></tr>'}
   });
@@ -511,7 +543,7 @@ function expClaude(){
   var codes=code=="H"?["H","H2","H3"]:[code];
   codes.forEach(function(cc){
    var base=cc[0]=="H"?"H":cc,s=SESS[base],lines=[];
-   s.ex.forEach(function(x){var sid=(cc=="H2"||cc=="H3")?x+"_"+cc:x;var l=getLog(selW,sid);
+   exList(s).forEach(function(x){var sid=(cc=="H2"||cc=="H3")?x+"_"+cc:x;var l=getLog(selW,sid);
     if(l&&l.kg){var p=prevLog(selW,sid),diff="";if(p&&p.l.kg&&+l.kg!=+p.l.kg)diff="  ["+(+l.kg>+p.l.kg?"+":"")+(Math.round((l.kg-p.l.kg)*10)/10)+" kg vs S"+p.w+"]";
      var ns=(l.sets||[]).filter(Boolean).length;
      lines.push("  "+EX[x].n+" : "+l.kg+" kg"+(ns?" ("+ns+" séries":"")+(l.rir!==undefined?", RIR "+l.rir+")":ns?")":"")+diff)}});
