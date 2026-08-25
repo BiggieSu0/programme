@@ -521,6 +521,22 @@ function weekVolume(){
  var allDone=(w.sess||[]).every(function(code){return ST.done[lk(selW,code)]});
  return {vol:vol,dips:dips,allDone:allDone};
 }
+var SLEEP_KEYWORDS=["mauvais","peu","dégrad","fatigu","insuffisant","pas assez","manque"];
+function detectAlerts(){
+ var reasons=[],declining=[];
+ Object.keys(EX).forEach(function(x){
+  if(EX[x].retired||x[0]=="b"||!EX[x].grp)return;
+  var pts=[];
+  for(var w=1;w<=selW;w++){var l=getLog(w,x);if(l&&l.kg)pts.push(+l.kg)}
+  var n=pts.length;
+  if(n>=3&&pts[n-1]<pts[n-2]&&pts[n-2]<pts[n-3])declining.push(EX[x].n);
+ });
+ if(declining.length)reasons.push("Charges qui reculent sur plusieurs séances consécutives : "+declining.join(", "));
+ var note=(ST.notes["w"+selW]||"").toLowerCase();
+ var sleepBad=note.indexOf("sommeil")>=0&&SLEEP_KEYWORDS.some(function(k){return note.indexOf(k)>=0});
+ if(sleepBad)reasons.push("Sommeil dégradé mentionné dans les notes de la semaine");
+ return {reasons:reasons,sleepBad:sleepBad};
+}
 function spark(vs){if(vs.length<2)return"";var mn=Math.min.apply(0,vs),mx=Math.max.apply(0,vs);if(mx==mn)mx=mn+1;
  var W=560,H=70,P=8,pts=vs.map(function(v,i){var x=P+i*(W-2*P)/(vs.length-1),y=H-P-(v-mn)*(H-2*P)/(mx-mn);return x.toFixed(1)+","+y.toFixed(1)});
  return '<svg class="spark" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><polyline fill="none" stroke="#3d8bff" stroke-width="2" points="'+pts.join(" ")+'"/></svg>'}
@@ -536,6 +552,16 @@ function rProg(){
   +'<div class="stat"><div class="v">'+ncharge+'</div><div class="k">Charges notées</div></div>'
   +'<div class="stat"><div class="v">'+Math.round(nv/12*100)+'<small>%</small></div><div class="k">Du cycle accompli</div></div>'
   +'</div>';
+ // signal d'alerte + ordre de coupe (0.11) — propose, n'applique jamais automatiquement
+ var al=detectAlerts();
+ if(al.reasons.length){
+  h+='<div class="card"><div class="pad"><h2>Signal d’alerte</h2>';
+  h+='<div class="banner warn" style="margin:0 0 10px">'+al.reasons.map(esc).join("<br>")+'</div>';
+  h+='<div style="font-size:13px;color:var(--mut);margin-bottom:8px">À toi de décider — rien n’est coupé automatiquement. Ordre de coupe proposé :</div>';
+  h+='<ol style="padding-left:18px;font-size:13.5px;line-height:1.9;margin-bottom:'+(al.sleepBad?"8px":"0")+'"><li>Écarté incliné → 2 séries</li><li>Oiseau → 2 séries</li><li>Développé couché → 3 séries</li></ol>';
+  if(al.sleepBad)h+='<div style="font-size:12.5px;color:var(--mut)">Si le sommeil reste sous 7 h : réduire le déficit à 600-750 kcal plutôt que couper davantage de volume.</div>';
+  h+='</div></div>';
+ }
  h+='<div class="card"><div class="pad"><h2>Poids</h2>'
   +'<div class="fline"><input id="inKg" type="number" step="0.1" inputmode="decimal" placeholder="kg — 1×/sem, à jeun"><button class="btn" onclick="addW()">Ajouter</button></div>'
   +spark(ST.weight.map(function(x){return +x.kg}))
