@@ -416,7 +416,7 @@ function normSets(log){
  log.sets.forEach(function(v,i){if(v===true||(v&&typeof v=="object"&&v.d))lastDone=i});
  return log.sets.map(function(v,i){
   if(v&&typeof v=="object"){
-   return {d:!!v.d,kg:(v.kg!=null?v.kg:(log.kg!=null?log.kg:null)),reps:(v.reps!=null?v.reps:null),r:(v.r!==undefined?v.r:null)};
+   return {d:!!v.d||v.kg!=null||v.reps!=null,kg:(v.kg!=null?v.kg:(log.kg!=null?log.kg:null)),reps:(v.reps!=null?v.reps:null),r:(v.r!==undefined?v.r:null)};
   }
   return {d:!!v,kg:(log.kg!=null?log.kg:null),reps:null,r:(i===lastDone?(log.rir||null):null)};
  });
