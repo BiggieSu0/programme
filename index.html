@@ -101,6 +101,7 @@ h2{font-size:16px;font-weight:700;letter-spacing:-.2px}
 .tag.echec{background:var(--warnsoft);color:var(--warn)}
 .prev{font-size:12px;color:var(--mut);margin-top:8px;font-variant-numeric:tabular-nums}
 .hint{margin-top:8px;font-size:12.5px;font-weight:700;color:var(--ok);background:var(--oksoft);border-radius:7px;padding:7px 10px}
+.hint.wait{color:var(--warn);background:var(--warnsoft)}
 .ctrls{margin-top:11px}
 .lbl{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
 .setrows{display:flex;flex-direction:column;gap:8px}
@@ -355,7 +356,26 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;
 function lk(w,x){return "w"+w+":"+x}
 function getLog(w,x){return ST.logs[lk(w,x)]||null}
 function prevLog(w,x){for(var i=w-1;i>=1;i--){var l=getLog(i,x);if(l&&l.sets&&l.sets.length)return{w:i,l:l}}return null}
-function progHint(w,x){var p=prevLog(w,x);if(!p||!p.l.hi)return null;var e=EX[x.split("_")[0]];if(p.l.hi){return "Toutes les séries au max en S"+p.w+" → +"+e.inc.replace('+','')+", repars à "+e.lo+" reps"}return null}
+function sessionQual(l,e){
+ var s=normSets(l).filter(function(st){return st.d});
+ if(!s.length)return null;
+ if(s.some(function(st){return st.r==null}))return "rir";
+ if(!s.every(function(st){return st.reps!=null&&+st.reps>=e.hi}))return "reps";
+ return "ok";
+}
+function progHint(w,x){
+ var e=EX[x.split("_")[0]];
+ var p1=prevLog(w,x);if(!p1)return null;
+ var q1=sessionQual(p1.l,e);
+ if(q1=="reps")return null;
+ if(q1=="rir")return {ok:false,text:"RIR manquant en S"+p1.w+" — pas de suggestion de montée"};
+ var p2=prevLog(p1.w,x);
+ if(!p2)return {ok:false,text:"1 séance sur 2 validée (S"+p1.w+") — encore une au top avant la montée"};
+ var q2=sessionQual(p2.l,e);
+ if(q2=="rir")return {ok:false,text:"RIR manquant en S"+p2.w+" — pas de suggestion de montée"};
+ if(q2!="ok")return {ok:false,text:"1 séance sur 2 validée (S"+p1.w+") — encore une au top avant la montée"};
+ return {ok:true,text:"Toutes les séries au max en S"+p2.w+" et S"+p1.w+" → +"+e.inc.replace('+','')+", repars à "+e.lo+" reps"};
+}
 
 /* ---- CALENDRIER ---- */
 function rPills(){
@@ -454,7 +474,7 @@ function exoCard(x,code,w){
  h+='<span class="tag '+e.tag+'">'+(e.tag=="echec"?"échec ok · dernière série":"RIR 1-3 · jamais d’échec")+'</span>';
  if(e.note)h+='<div class="exdesc">'+esc(e.note)+'</div>';
  if(p){var pk=repKg(p.l),pr=repReps(p.l);if(pk!=null)h+='<div class="prev">S'+p.w+' : '+esc(pk+" kg"+(pr!=null?" × "+pr:""))+'</div>'}
- if(hint)h+='<div class="hint">↑ '+esc(hint)+'</div>';
+ if(hint)h+='<div class="hint'+(hint.ok?"":" wait")+'">'+(hint.ok?"↑ ":"")+esc(hint.text)+'</div>';
  if(pf!=null&&(!normed[0]||normed[0].kg==null))h+='<div class="hint">Repris à 90 % de S5 — ajuste si besoin.</div>';
  h+='<div class="ctrls"><div class="lbl">Séries — charge, reps, RIR (la série 1 pré-remplit les suivantes)</div><div class="setrows">';
  var nset=e.s+((w.bloc==3&&(x=="curlinc"||x=="tricmach"||x=="ecarte"))?1:0);
