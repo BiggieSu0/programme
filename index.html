@@ -556,7 +556,7 @@ function setRunMin(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].min=v===""?null:v;
 function setRunType(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].type=v===""?null:v;clearRunIfEmpty(r,i);save();render()}
 
 /* ---- PROGRESSION ---- */
-var VOL_TARGETS={"Dos":16,"Pecs":13,"Deltoïde latéral":8,"Deltoïde postérieur":6,"Biceps":9,"Triceps":7,"Ischios":3,"Quadriceps":3};
+var VOL_TARGETS={"Dos":16,"Pecs":13,"Deltoïde latéral":12,"Deltoïde postérieur":6,"Biceps":9,"Triceps":7,"Ischios":3,"Quadriceps":3};
 function weekVolume(){
  var w=WEEKS[selW-1];
  if(w.bloc==2||(w.sess||[]).length<4)return null;
