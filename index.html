@@ -227,7 +227,7 @@ var EX = {
  rowp:{n:"Rowing horizontal poulie",s:3,lo:10,hi:12,tag:"rir",inc:"+2,5 kg",gif:"0861",grp:"Dos",note:"Laisse-toi étirer vers l'avant entre les reps."},
  step:{n:"Step-up sur banc, haltères",s:3,lo:10,hi:10,tag:"rir",inc:"+2 kg/haltère",leg:true,gif:"0336",gifnote:"fente montrée — toi, monte sur un banc, pousse dans le talon",grp:"Jambes",note:"Toutes les reps d'une jambe, puis l'autre."},
  lat:{n:"Élévations latérales haltères",s:4,lo:12,hi:20,tag:"echec",inc:"+1 kg/haltère",isolation:true,repos_s:75,gif:"0334",grp:"Deltoïde latéral",note:"Si tu balances le buste, c'est trop lourd."},
- tricoh:{n:"Extension triceps au-dessus de la tête, haltère à 2 mains",s:3,lo:10,hi:15,tag:"echec",inc:"+2,5 kg",isolation:true,repos_s:90,grp:"Triceps",note:"Assis, haltère à deux mains derrière la tête, coudes qui restent hauts et fixes."},
+ tricoh:{n:"Extension triceps au-dessus de la tête, haltère à 2 mains",s:3,lo:10,hi:15,tag:"echec",inc:"+2,5 kg",isolation:true,repos_s:90,grp:"Triceps",retired:true,note:"Assis, haltère à deux mains derrière la tête, coudes qui restent hauts et fixes."},
  tvsup:{n:"Tirage vertical supination serré",s:3,lo:8,hi:12,tag:"rir",inc:"+2,5 kg",repos_s:120,gif:"0652",gifnote:"traction montrée — même tirage vertical, mains en supination",grp:"Dos",note:"Dorsaux + biceps."},
  dmh:{n:"Développé militaire haltères assis",s:3,lo:8,hi:12,tag:"rir",inc:"+2 kg/haltère",gif:"0405",grp:"Épaules",retired:true},
  bulg:{n:"Fentes bulgares",s:3,lo:8,hi:10,tag:"rir",inc:"+2 kg/haltère",leg:true,gif:"0410",grp:"Jambes",note:"Pied arrière sur le banc. À la maison : presse à cuisses possible.",retired:true},
@@ -236,18 +236,18 @@ var EX = {
  tripd:{n:"Extension triceps poulie",s:4,lo:10,hi:15,tag:"echec",inc:"+2,5 kg",grp:"Triceps",note:"Coudes collés au corps, on pousse vers le bas.",retired:true},
  curlp:{n:"Curl poulie ou haltères",s:3,lo:10,hi:12,tag:"echec",inc:"+1 kg",grp:"Biceps",note:"Poulie basse ou haltères, au choix selon la disponibilité du matériel.",retired:true},
  latc:{n:"Élévations latérales poulie, bras derrière le corps",s:4,lo:12,hi:15,tag:"echec",inc:"+1 kg",isolation:true,repos_s:75,gif:"0334",gifnote:"version haltère montrée — à la poulie, tension constante en bas",grp:"Deltoïde latéral"},
- squat:{n:"Squat barre",s:3,lo:5,hi:8,tag:"rir",inc:"+5 kg",barre:true,repos_s:180,gif:"0043",grp:"Quadriceps",note:"1-3 RIR. Sécurités réglées, 2-3 séries d'échauffement progressives avant. Descends tant que le dos reste plat."},
+ squat:{n:"Squat barre",s:3,lo:5,hi:8,tag:"rir",inc:"+5 kg",barre:true,repos_s:180,gif:"0043",grp:"Quadriceps",retired:true,note:"1-3 RIR. Sécurités réglées, 2-3 séries d'échauffement progressives avant. Descends tant que le dos reste plat."},
  rowlourd:{n:"Rowing barre lourd",s:3,lo:6,hi:10,tag:"rir",inc:"+2,5 kg",gif:"0027",grp:"Dos",retired:true},
  dmb:{n:"Développé militaire barre debout",s:3,lo:6,hi:8,tag:"rir",inc:"+2,5 kg",barre:true,repos_s:180,gif:"1457",grp:"Épaules",note:"1-3 RIR. Debout, fessiers et abdos serrés."},
  pull:{n:"Pull-over poulie bras tendus",s:3,lo:12,hi:15,tag:"rir",inc:"+2,5 kg",grp:"Dos",note:"Bras quasi tendus, de au-dessus de la tête jusqu'aux cuisses. Dorsaux en étirement."},
  latlourd:{n:"Élévations latérales lourdes",s:4,lo:10,hi:12,tag:"echec",inc:"+1 kg/haltère",gif:"0334",grp:"Épaules",note:"Plus lourd, amplitude un peu réduite acceptée.",retired:true},
  shrug:{n:"Shrugs haltères",s:3,lo:10,hi:12,tag:"echec",inc:"+2 kg/haltère",grp:"Trapèzes",note:"Épaules vers les oreilles, 1 s de pause en haut.",retired:true},
- dips:{n:"Dips",s:3,lo:8,hi:12,tag:"rir",inc:"lest plus tard",repos_s:150,gif:"0251",grp:"Pecs",dipsExtra:true,note:"Lester si plus de 12 reps faciles. Épaules qui tirent → extension triceps à la place."},
+ dips:{n:"Dips",s:3,lo:8,hi:12,tag:"rir",inc:"lest plus tard",repos_s:150,gif:"0251",grp:"Pecs",dipsExtra:true,retired:true,note:"Lester si plus de 12 reps faciles. Épaules qui tirent → extension triceps à la place."},
  farmer:{n:"Marche du fermier",s:3,lo:40,hi:40,tag:"rir",inc:"+2 kg/haltère",m:true,repos_s:120,gif:"2133",grp:"Full body",note:"Les haltères les plus lourds que tu peux tenir. Marche droit, épaules basses."},
- abs:{n:"Relevé de jambes / gainage",s:3,lo:12,hi:15,tag:"rir",inc:"tempo",gif:"0472",grp:"Abdos",note:"10 min d'abdos : relevés de jambes lents + gainage."},
- rowhinc:{n:"Rowing haltères poitrine appuyée sur banc incliné",s:3,lo:8,hi:12,tag:"rir",inc:"+2 kg/haltère",repos_s:150,grp:"Dos",note:"Buste appuyé à 30-45° sur banc incliné, haltères pendent sous les épaules. Tire les coudes vers l'arrière et le haut, omoplates qui se resserrent, contrôle la descente."},
+ abs:{n:"Relevé de jambes / gainage",s:3,lo:12,hi:15,tag:"rir",inc:"tempo",gif:"0472",grp:"Abdos",retired:true,note:"10 min d'abdos : relevés de jambes lents + gainage."},
+ rowhinc:{n:"Rowing haltères poitrine appuyée sur banc incliné",s:3,lo:8,hi:12,tag:"rir",inc:"+2 kg/haltère",repos_s:150,grp:"Dos",retired:true,note:"Buste appuyé à 30-45° sur banc incliné, haltères pendent sous les épaules. Tire les coudes vers l'arrière et le haut, omoplates qui se resserrent, contrôle la descente."},
  oiseauinc:{n:"Oiseau haltères poitrine appuyée sur banc incliné",s:3,lo:12,hi:15,tag:"echec",inc:"+1 kg/haltère",isolation:true,grp:"Deltoïde postérieur",note:"Buste appuyé sur banc incliné à 30-45°, front posé, haltères légers. Bras presque tendus, lève sur les côtés jusqu'à l'horizontale, coudes légèrement fléchis, redescends lentement."},
- tricoc:{n:"Extension triceps poulie au-dessus de la tête, corde, dos à la poulie",s:4,lo:10,hi:15,tag:"echec",inc:"+2,5 kg",isolation:true,repos_s:90,grp:"Triceps",note:"Dos à la poulie haute, corde tenue à deux mains derrière la nuque, coudes hauts et fixes. Étends les bras vers l'avant-haut sans bouger les coudes."},
+ tricoc:{n:"Extension triceps poulie au-dessus de la tête, corde, dos à la poulie",s:4,lo:10,hi:15,tag:"echec",inc:"+2,5 kg",isolation:true,repos_s:90,grp:"Triceps",retired:true,note:"Dos à la poulie haute, corde tenue à deux mains derrière la nuque, coudes hauts et fixes. Étends les bras vers l'avant-haut sans bouger les coudes."},
  curlpb:{n:"Curl poulie basse, bras derrière le corps",s:3,lo:10,hi:12,tag:"echec",inc:"+1 kg",isolation:true,repos_s:90,grp:"Biceps",note:"Poulie basse, dos à l'appareil, bras tendu derrière le corps. Fléchis le coude en gardant le bras derrière toi tout du long — étirement du biceps en position basse."},
  curlisch:{n:"Curl ischios poulie basse, sangle de cheville",s:3,lo:10,hi:15,tag:"rir",inc:"+2,5 kg",repos_s:150,grp:"Ischios",note:"Sangle de cheville à la poulie basse, allongé ou en appui, jambe tendue. Fléchis le genou contre la résistance de la poulie, contrôle le retour. Remplacement du RDL si lombaires fatiguées."},
  bpresse:{n:"Presse à cuisses ou goblet squat",s:2,lo:10,hi:10,tag:"rir",inc:"+5 kg",grp:"Jambes",note:"Presse à cuisses (dos calé, pieds largeur épaules) ou goblet squat (haltère contre la poitrine, descente contrôlée, genoux dans l'axe des pieds)."},
@@ -257,14 +257,20 @@ var EX = {
  b4:{n:"Développé militaire haltères",s:3,lo:10,hi:12,tag:"rir",inc:"—",gif:"0405",grp:"Épaules",retired:true},
  b5:{n:"Élévations latérales",s:3,lo:15,hi:15,tag:"echec",inc:"—",gif:"0334",grp:"Épaules",retired:true},
  b6:{n:"Curl",s:2,lo:12,hi:12,tag:"rir",inc:"—",gif:"0294",grp:"Biceps"},
- b7:{n:"Extension triceps",s:2,lo:12,hi:12,tag:"rir",inc:"—",gif:"0251",grp:"Triceps"}
+ b7:{n:"Extension triceps",s:2,lo:12,hi:12,tag:"rir",inc:"—",gif:"0251",grp:"Triceps"},
+ tricmach:{n:"Extension triceps à la machine",s:3,lo:10,hi:15,tag:"echec",inc:"+2,5 kg",isolation:true,repos_s:90,grp:"Triceps",note:"Machine dédiée triceps (extension ou poulie basse assise selon la salle), dos calé, coudes fixes tout du long."},
+ tricf:{n:"Extension triceps poulie, corde, face à la poulie",s:4,lo:10,hi:15,tag:"echec",inc:"+2,5 kg",isolation:true,repos_s:90,grp:"Triceps",note:"Face à la poulie haute, coudes collés au corps et fixes, pousse la corde vers le bas puis écarte légèrement en fin de mouvement."},
+ crunchpl:{n:"Crunch enroulé + gainage planche",s:3,lo:12,hi:15,tag:"rir",inc:"tempo",grp:"Abdos",note:"10 min d'abdos : crunchs enroulés lents, contrôle la descente + gainage planche, coudes sous les épaules, ne creuse pas le bas du dos."},
+ rowun:{n:"Rowing haltère un bras, appui sur banc",s:3,lo:8,hi:12,tag:"rir",inc:"+2 kg/haltère",leg:true,repos_s:150,grp:"Dos",note:"Genou et main opposés en appui sur le banc, dos plat. Tire le coude vers la hanche sans tourner le buste. Toutes les reps d'un côté, puis l'autre."},
+ dchser:{n:"Développé haltères prise serrée",s:3,lo:8,hi:12,tag:"rir",inc:"+2 kg/haltère",repos_s:150,grp:"Pecs",dipsExtra:true,note:"Haltères rapprochés au-dessus de la poitrine, coudes qui frôlent les côtes à la descente, pousse en gardant les mains proches l'une de l'autre tout du long."},
+ pressev:{n:"Presse à cuisses",s:3,lo:8,hi:12,tag:"rir",inc:"+5 kg",repos_s:150,grp:"Quadriceps",note:"Dos calé contre le dossier, pieds largeur épaules sur le plateau. Descends jusqu'à 90° de flexion de genou sans décoller le bas du dos."}
 };
 
 var SESS = {
  A:{t:"Dos + biceps",sub:"Mardi midi · salle du boulot, 47 min",ex:["rowb","tv","curlinc",{sup:["marteau","facepull"],repos_s:60,note:"Si la poulie est loin des haltères : fais 4a puis 4b en séries normales, avec 60 s de repos."}]},
- B:{t:"Pecs + épaules + triceps",sub:"Lundi midi · salle du boulot, 47 min",ex:["dcb","dih","lat","tricoh"]},
- C:{t:"Ischios, rappel dos, bras, rappel pecs/épaules",sub:"Mercredi soir · maison, 70 min",ex:["rdl","tvsup","tricoc","curlpb","ecarte","latc","abs"]},
- V:{t:"Dos, épaules, pecs, jambes",sub:"Vendredi · maison, 88 min",ex:["rowhinc","dmb","dips","squat",{sup:["pull","oiseauinc"],repos_s:75},"farmer","abs"]},
+ B:{t:"Pecs + épaules + triceps",sub:"Lundi midi · salle du boulot, 47 min",ex:["dcb","dih","lat","tricmach"]},
+ C:{t:"Ischios, rappel dos, bras, rappel pecs/épaules",sub:"Mercredi soir · maison, 70 min",ex:["rdl","tvsup","tricf","curlpb","ecarte","latc","crunchpl"]},
+ V:{t:"Dos, épaules, pecs, jambes",sub:"Vendredi · maison, 88 min",ex:["rowun","dmb","dchser","pressev",{sup:["pull","oiseauinc"],repos_s:75},"farmer","crunchpl"]},
  H:{t:"Full body entretien",sub:"2× / semaine · maison ou salle, ~45 min · tout à 2 RIR",ex:["bpresse","b2","b3","b1","b6","b7"]}
 };
 
@@ -277,7 +283,7 @@ var WEEKS = [
  {n:6,d:"19–27 sept",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre bord de mer, 20-30 min"},note:"<b>Maintien.</b> Entretien ~2900-3000 kcal, profite. 2 séances, pas plus."},
  {n:7,d:"28 sept – 4 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre — vise le 5 km continu"},note:"Le 5 km continu se joue ici : reposé, plus léger, au niveau de la mer."},
  {n:8,d:"5–11 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre"},note:"Dernière semaine de vacances. Retour dimanche."},
- {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"4 × (5 min / 1 min)"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps haltère et écarté incliné. Retour au déficit."},
+ {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"4 × (5 min / 1 min)"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps machine et écarté incliné. Retour au déficit."},
  {n:10,d:"19–25 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"3 × (7 min / 1 min)"},note:"Retour aux charges de S5, puis on dépasse."},
  {n:11,d:"26 oct – 1 nov",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × (10 min / 1 min)"},note:"Volume maximal du programme."},
  {n:12,d:"2–8 nov",bloc:3,ph:"Bilan",dl:true,sess:["A","B","C","V"],run:{c:2,t:"5 km continu"},note:"<b>Dernière semaine.</b> Tests, photos, mesures, bilan ensemble."}
@@ -392,7 +398,7 @@ function rCal(){
     +'<div class="miniex">'+mini+'</div></div>';
   } else if(code=="run1"||code=="runL"||code=="runB"){
    var lbl=code=="run1"?"Course intervalles":code=="runL"?"Course facile":"Courses de la semaine";
-   var runTxt=(code=="runL"&&w.bloc!=2)?"Allure facile, conversationnelle. Lendemain de squat + marche du fermier — pas de progression ici.":w.run.t;
+   var runTxt=(code=="runL"&&w.bloc!=2)?"Allure facile, conversationnelle. Lendemain de presse à cuisses + marche du fermier — pas de progression ici.":w.run.t;
    var runsArr=ST.runs["w"+selW]||[],slotIdxs=[];
    if(code=="run1")slotIdxs=[0];else if(code=="runL")slotIdxs=[1];else for(var ri=0;ri<w.run.c;ri++)slotIdxs.push(ri);
    var doneTxt=slotIdxs.map(function(i){var rr=runsArr[i];if(!rr)return null;var parts=[];if(rr.km!=null)parts.push(rr.km+" km");if(rr.min!=null)parts.push(rr.min+" min");return "✓ "+(parts.length?parts.join(" · "):"faite")}).filter(Boolean).join("<br>");
@@ -449,7 +455,7 @@ function exoCard(x,code,w){
  if(hint)h+='<div class="hint">↑ '+esc(hint)+'</div>';
  if(pf!=null&&(!normed[0]||normed[0].kg==null))h+='<div class="hint">Repris à 90 % de S5 — ajuste si besoin.</div>';
  h+='<div class="ctrls"><div class="lbl">Séries — charge, reps, RIR (la série 1 pré-remplit les suivantes)</div><div class="setrows">';
- var nset=e.s+((w.bloc==3&&(x=="curlinc"||x=="tricoh"||x=="ecarte"))?1:0);
+ var nset=e.s+((w.bloc==3&&(x=="curlinc"||x=="tricmach"||x=="ecarte"))?1:0);
  var eff0kg=(normed[0]&&normed[0].kg!=null)?normed[0].kg:pf;
  var eff0reps=normed[0]?normed[0].reps:null;
  for(var i=0;i<nset;i++){
@@ -486,7 +492,7 @@ function startRest(key,secs){
 function rSession(w){
  var code=view.sess,base=code[0]=="H"?"H":code,s=SESS[base],h="";
  h+='<button class="backln" onclick="view.sess=null;render()">← Semaine '+selW+'</button>';
- if(w.bloc==3)h+='<div class="banner">Semaines 9-12 : <b>+1 série</b> sur curl incliné (A), extension triceps haltère (B), écarté incliné (C). Dos et épaules inchangés.</div>';
+ if(w.bloc==3)h+='<div class="banner">Semaines 9-12 : <b>+1 série</b> sur curl incliné (A), extension triceps machine (B), écarté incliné (C). Dos et épaules inchangés.</div>';
  h+='<div class="card"><div class="pad" style="border-bottom:1px solid var(--line)"><h2>'+esc(s.t)+'</h2><div style="font-size:12.5px;color:var(--mut);margin-top:2px">'+esc(s.sub)+'</div></div>';
  s.ex.forEach(function(x){
   if(typeof x=="string"){
@@ -627,7 +633,7 @@ function rProg(){
   Object.keys(VOL_TARGETS).forEach(function(g){
    var target=VOL_TARGETS[g],done=wv.vol[g]||0,dev=target?Math.abs(done-target)/target:0,alert=wv.allDone&&dev>0.2;
    if(alert)anyAlert=true;
-   vrows+='<tr><td>'+esc(g)+(g=="Triceps"?' <span style="color:var(--mut2)">(+dips '+wv.dips+')</span>':'')+'</td><td>'+target+'</td><td>'+done+'</td><td>'+(alert?'<span style="color:var(--warn);font-weight:800">±20%</span>':'')+'</td></tr>';
+   vrows+='<tr><td>'+esc(g)+(g=="Triceps"?' <span style="color:var(--mut2)">(+développé serré '+wv.dips+')</span>':'')+'</td><td>'+target+'</td><td>'+done+'</td><td>'+(alert?'<span style="color:var(--warn);font-weight:800">±20%</span>':'')+'</td></tr>';
   });
   h+='<table class="ctable"><tr><th>Groupe</th><th>Cible v2</th><th>Fait</th><th></th></tr>'+vrows+'</table>';
   if(!wv.allDone)h+='<div style="font-size:12px;color:var(--mut2);margin-top:8px">Semaine pas encore terminée : comparaison indicative, l’alerte ±20% ne se déclenche qu’une fois toutes les séances de la semaine marquées faites.</div>';
