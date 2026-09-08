@@ -393,7 +393,10 @@ function rCal(){
   } else if(code=="run1"||code=="runL"||code=="runB"){
    var lbl=code=="run1"?"Course intervalles":code=="runL"?"Course facile":"Courses de la semaine";
    var runTxt=(code=="runL"&&w.bloc!=2)?"Allure facile, conversationnelle. Lendemain de squat + marche du fermier — pas de progression ici.":w.run.t;
-   h+='<div class="daycol rest"><div class="dh"><b>'+esc(day)+'</b><span>'+lbl+'</span></div><div class="restnote">'+esc(runTxt)+'<br><small style="color:var(--mut2)">coche dans Progression</small></div></div>';
+   var runsArr=ST.runs["w"+selW]||[],slotIdxs=[];
+   if(code=="run1")slotIdxs=[0];else if(code=="runL")slotIdxs=[1];else for(var ri=0;ri<w.run.c;ri++)slotIdxs.push(ri);
+   var doneTxt=slotIdxs.map(function(i){var rr=runsArr[i];if(!rr)return null;var parts=[];if(rr.km!=null)parts.push(rr.km+" km");if(rr.min!=null)parts.push(rr.min+" min");return "✓ "+(parts.length?parts.join(" · "):"faite")}).filter(Boolean).join("<br>");
+   h+='<div class="daycol rest"><div class="dh"><b>'+esc(day)+'</b><span>'+lbl+'</span></div><div class="restnote">'+esc(runTxt)+'<br>'+(doneTxt?'<b style="color:var(--ok)">'+doneTxt+'</b>':'<small style="color:var(--mut2)">à logger dans Progression</small>')+'</div></div>';
   } else if(code=="cours"){
    h+='<div class="daycol rest"><div class="dh"><b>Jeudi</b><span>Cours du prof</span></div><div class="restnote">midi · renfo ou cardio</div></div>';
   } else {
@@ -514,6 +517,13 @@ function setSetKg(sid,i,v){var k=ensure(sid);var s=promoteSets(k,i);s[i].kg=v===
 function setSetReps(sid,i,v){var k=ensure(sid);var s=promoteSets(k,i);s[i].reps=v===""?null:v;save();render()}
 function tglDone(code){var k=lk(selW,code);if(ST.done[k])delete ST.done[k];else ST.done[k]=true;save();render()}
 function toggleSub(key){if(ST.subs[key])delete ST.subs[key];else ST.subs[key]=true;save();render()}
+function runSlotInfo(w,i){
+ if(w.bloc==2)return {lbl:"Course "+(i+1),tgt:w.run.t};
+ return i==0?{lbl:"Mardi soir — intervalles",tgt:w.run.t}:{lbl:"Samedi — facile",tgt:"Allure facile, conversationnelle."};
+}
+function ensureRuns(){var k="w"+selW;ST.runs[k]=ST.runs[k]||[];return ST.runs[k]}
+function setRunKm(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].km=v===""?null:v;if(r[i].km==null&&r[i].min==null)r[i]=null;save();render()}
+function setRunMin(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].min=v===""?null:v;if(r[i].km==null&&r[i].min==null)r[i]=null;save();render()}
 
 /* ---- PROGRESSION ---- */
 var VOL_TARGETS={"Dos":16,"Pecs":13,"Deltoïde latéral":8,"Deltoïde postérieur":6,"Biceps":9,"Triceps":7,"Ischios":3,"Quadriceps":3};
@@ -555,6 +565,7 @@ function spark(vs){if(vs.length<2)return"";var mn=Math.min.apply(0,vs),mx=Math.m
  var W=560,H=70,P=8,pts=vs.map(function(v,i){var x=P+i*(W-2*P)/(vs.length-1),y=H-P-(v-mn)*(H-2*P)/(mx-mn);return x.toFixed(1)+","+y.toFixed(1)});
  return '<svg class="spark" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none"><polyline fill="none" stroke="#3d8bff" stroke-width="2" points="'+pts.join(" ")+'"/></svg>'}
 function rProg(){
+ var w=WEEKS[selW-1];
  var nv=Object.keys(ST.valid).length;
  var ncharge=0;Object.keys(ST.logs).forEach(function(k){if(repKg(ST.logs[k]))ncharge++});
  var last=ST.weight.length?ST.weight[ST.weight.length-1]:null,first=ST.weight.length?ST.weight[0]:null;
@@ -582,6 +593,16 @@ function rProg(){
   +'<div class="hist">'+(ST.weight.length?ST.weight.slice(-10).reverse().map(function(x){return x.d+" — <b>"+x.kg+" kg</b>"}).join("<br>"):'<span style="color:var(--mut2)">Ajoute au moins deux pesées pour voir la tendance.</span>')+'</div>'
   +'<div style="font-size:12px;color:var(--mut2);margin-top:8px">Même jour chaque semaine, le matin, à jeun. Une pesée isolée ne veut rien dire ; la tendance sur 2-3 semaines, si.</div>'
   +'</div></div>';
+ // course — log distance/durée par run
+ h+='<div class="card"><div class="pad"><h2>Course — semaine '+selW+'</h2>';
+ var runsArr=ST.runs["w"+selW]||[];
+ for(var ri=0;ri<w.run.c;ri++){
+  var rr=runsArr[ri]||{},info=runSlotInfo(w,ri);
+  h+='<div class="lbl" style="margin-top:'+(ri?"14px":"0")+'">'+esc(info.lbl)+' — '+esc(info.tgt)+'</div>'
+   +'<div class="fline"><input type="number" step="0.1" inputmode="decimal" placeholder="km" value="'+(rr.km!=null?rr.km:"")+'" onchange="setRunKm('+ri+',this.value)">'
+   +'<input type="number" inputmode="numeric" placeholder="min" value="'+(rr.min!=null?rr.min:"")+'" onchange="setRunMin('+ri+',this.value)"></div>';
+ }
+ h+='</div></div>';
  // charges table for current week
  h+='<div class="card"><div class="pad"><h2>Charges — semaine '+selW+'</h2>';
  var rows="";
