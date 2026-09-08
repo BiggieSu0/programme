@@ -142,7 +142,7 @@ details.mov img{margin-top:9px;border-radius:10px;max-width:300px;background:#0f
 .stat .v small{font-size:14px;color:var(--mut);font-weight:600}
 .stat .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-top:4px}
 .fline{display:flex;gap:8px;margin-top:10px}
-.fline input{flex:1;border:1px solid var(--line);border-radius:9px;padding:10px;background:var(--bg2);font-size:15px}
+.fline input,.fline select{flex:1;border:1px solid var(--line);border-radius:9px;padding:10px;background:var(--bg2);font-size:15px}
 .btn{border:1px solid var(--acc);background:var(--acc);color:#04122b;border-radius:9px;padding:10px 16px;font-weight:800;font-size:13.5px;cursor:pointer}
 .btn.ghost{background:var(--card);color:var(--ink);border-color:var(--line)}
 .btn.wide{width:100%;margin-top:8px}
@@ -278,18 +278,18 @@ var SESS = {
 };
 
 var WEEKS = [
- {n:1,d:"17–23 août",bloc:1,ph:"Fondations",sess:["A","B","V"],run:{c:2,t:"6 × (2 min / 1 min)"},note:"<b>Trouve tes charges.</b> Arrête chaque série à 3 reps de la fin, partout, isolation comprise. Note tout."},
- {n:2,d:"24–30 août",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"7 × (2 min / 1 min)"},note:"Mêmes charges qu'en S1, +1 rep par série si ça passe. La séance C arrive."},
- {n:3,d:"31 août – 6 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"8 × (2 min / 1 min)"},note:"<b>Cible atteinte.</b> On resserre à 1-2 reps de la fin. Échec autorisé sur la dernière série des exos marqués."},
- {n:4,d:"7–13 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"9 × (2 min / 1 min)"},note:"La semaine la plus lourde du bloc."},
- {n:5,d:"14–18 sept",bloc:1,ph:"Test",dl:true,sess:["A","B","C","V"],run:{c:2,t:"10 × (2 min / 1 min) puis TEST 5 KM"},note:"<b>Semaine complète, pas d’allègement.</b> Test 5 km + photos avant Bali."},
+ {n:1,d:"17–23 août",bloc:1,ph:"Fondations",sess:["A","B","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"<b>Trouve tes charges.</b> Arrête chaque série à 3 reps de la fin, partout, isolation comprise. Note tout."},
+ {n:2,d:"24–30 août",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"Mêmes charges qu'en S1, +1 rep par série si ça passe. La séance C arrive."},
+ {n:3,d:"31 août – 6 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"<b>Cible atteinte.</b> On resserre à 1-2 reps de la fin. Échec autorisé sur la dernière série des exos marqués."},
+ {n:4,d:"7–13 sept",bloc:1,ph:"Fondations",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"La semaine la plus lourde du bloc."},
+ {n:5,d:"14–18 sept",bloc:1,ph:"Test",dl:true,sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"<b>Semaine complète, pas d’allègement.</b> Photos avant Bali."},
  {n:6,d:"19–27 sept",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre bord de mer, 20-30 min"},note:"<b>Maintien.</b> Entretien ~2900-3000 kcal, profite. 2 séances, pas plus."},
  {n:7,d:"28 sept – 4 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre — vise le 5 km continu"},note:"Le 5 km continu se joue ici : reposé, plus léger, au niveau de la mer."},
  {n:8,d:"5–11 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre"},note:"Dernière semaine de vacances. Retour dimanche."},
- {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"4 × (5 min / 1 min)"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps machine et écarté incliné. Retour au déficit."},
- {n:10,d:"19–25 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"3 × (7 min / 1 min)"},note:"Retour aux charges de S5, puis on dépasse."},
- {n:11,d:"26 oct – 1 nov",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"2 × (10 min / 1 min)"},note:"Volume maximal du programme."},
- {n:12,d:"2–8 nov",bloc:3,ph:"Bilan",dl:true,sess:["A","B","C","V"],run:{c:2,t:"5 km continu"},note:"<b>Dernière semaine.</b> Tests, photos, mesures, bilan ensemble."}
+ {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps machine et écarté incliné. Retour au déficit."},
+ {n:10,d:"19–25 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"Retour aux charges de S5, puis on dépasse."},
+ {n:11,d:"26 oct – 1 nov",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"Volume maximal du programme."},
+ {n:12,d:"2–8 nov",bloc:3,ph:"Bilan",dl:true,sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"<b>Dernière semaine.</b> Tests, photos, mesures, bilan ensemble."}
 ];
 
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
@@ -419,11 +419,11 @@ function rCal(){
     +'<div class="opencta" onclick="openSess(\''+code+'\')"><span style="font-size:13px;font-weight:700">Ouvrir la séance</span><span class="st'+(done?" done":"")+'">'+(done?"✓ faite":"→")+'</span></div>'
     +'<div class="miniex">'+mini+'</div></div>';
   } else if(code=="run1"||code=="runL"||code=="runB"){
-   var lbl=code=="run1"?"Course intervalles":code=="runL"?"Course facile":"Courses de la semaine";
-   var runTxt=(code=="runL"&&w.bloc!=2)?"Allure facile, conversationnelle. Lendemain de presse à cuisses + marche du fermier — pas de progression ici.":w.run.t;
+   var lbl=code=="run1"?"Marche":code=="runL"?"Cardio":"Cardio de la semaine";
+   var runTxt=w.bloc==2?w.run.t:(code=="run1"?"Marche 30-45 min":"Cardio sans impact 20-25 min (vélo, elliptique ou marche en côte) — effort où je peux parler mais pas chanter");
    var runsArr=ST.runs["w"+selW]||[],slotIdxs=[];
    if(code=="run1")slotIdxs=[0];else if(code=="runL")slotIdxs=[1];else for(var ri=0;ri<w.run.c;ri++)slotIdxs.push(ri);
-   var doneTxt=slotIdxs.map(function(i){var rr=runsArr[i];if(!rr)return null;var parts=[];if(rr.km!=null)parts.push(rr.km+" km");if(rr.min!=null)parts.push(rr.min+" min");return "✓ "+(parts.length?parts.join(" · "):"faite")}).filter(Boolean).join("<br>");
+   var doneTxt=slotIdxs.map(function(i){var rr=runsArr[i];if(!rr)return null;var parts=[];if(rr.type)parts.push(rr.type);if(rr.km!=null)parts.push(rr.km+" km");if(rr.min!=null)parts.push(rr.min+" min");return "✓ "+(parts.length?parts.join(" · "):"faite")}).filter(Boolean).join("<br>");
    h+='<div class="daycol rest"><div class="dh"><b>'+esc(day)+'</b><span>'+lbl+'</span></div><div class="restnote">'+esc(runTxt)+'<br>'+(doneTxt?'<b style="color:var(--ok)">'+doneTxt+'</b>':'<small style="color:var(--mut2)">à logger dans Progression</small>')+'</div></div>';
   } else if(code=="cours"){
    h+='<div class="daycol rest"><div class="dh"><b>Jeudi</b><span>Cours du prof</span></div><div class="restnote">midi · renfo ou cardio</div></div>';
@@ -546,12 +546,14 @@ function setSetReps(sid,i,v){var k=ensure(sid);var s=promoteSets(k,i);s[i].reps=
 function tglDone(code){var k=lk(selW,code);if(ST.done[k])delete ST.done[k];else ST.done[k]=true;save();render()}
 function toggleSub(key){if(ST.subs[key])delete ST.subs[key];else ST.subs[key]=true;save();render()}
 function runSlotInfo(w,i){
- if(w.bloc==2)return {lbl:"Course "+(i+1),tgt:w.run.t};
- return i==0?{lbl:"Mardi soir — intervalles",tgt:w.run.t}:{lbl:"Samedi — facile",tgt:"Allure facile, conversationnelle."};
+ if(w.bloc==2)return {lbl:"Cardio "+(i+1),tgt:w.run.t};
+ return i==0?{lbl:"Mardi soir — marche",tgt:"Marche 30-45 min"}:{lbl:"Samedi — cardio sans impact",tgt:"20-25 min (vélo, elliptique ou marche en côte) — effort où je peux parler mais pas chanter"};
 }
 function ensureRuns(){var k="w"+selW;ST.runs[k]=ST.runs[k]||[];return ST.runs[k]}
-function setRunKm(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].km=v===""?null:v;if(r[i].km==null&&r[i].min==null)r[i]=null;save();render()}
-function setRunMin(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].min=v===""?null:v;if(r[i].km==null&&r[i].min==null)r[i]=null;save();render()}
+function clearRunIfEmpty(r,i){if(r[i]&&r[i].km==null&&r[i].min==null&&!r[i].type)r[i]=null}
+function setRunKm(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].km=v===""?null:v;clearRunIfEmpty(r,i);save();render()}
+function setRunMin(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].min=v===""?null:v;clearRunIfEmpty(r,i);save();render()}
+function setRunType(i,v){var r=ensureRuns();r[i]=r[i]||{};r[i].type=v===""?null:v;clearRunIfEmpty(r,i);save();render()}
 
 /* ---- PROGRESSION ---- */
 var VOL_TARGETS={"Dos":16,"Pecs":13,"Deltoïde latéral":8,"Deltoïde postérieur":6,"Biceps":9,"Triceps":7,"Ischios":3,"Quadriceps":3};
@@ -621,13 +623,15 @@ function rProg(){
   +'<div class="hist">'+(ST.weight.length?ST.weight.slice(-10).reverse().map(function(x){return x.d+" — <b>"+x.kg+" kg</b>"}).join("<br>"):'<span style="color:var(--mut2)">Ajoute au moins deux pesées pour voir la tendance.</span>')+'</div>'
   +'<div style="font-size:12px;color:var(--mut2);margin-top:8px">Même jour chaque semaine, le matin, à jeun. Une pesée isolée ne veut rien dire ; la tendance sur 2-3 semaines, si.</div>'
   +'</div></div>';
- // course — log distance/durée par run
- h+='<div class="card"><div class="pad"><h2>Course — semaine '+selW+'</h2>';
+ // cardio — log type/distance/durée par séance
+ var CARDIO_TYPES=[["","Type"],["marche","Marche"],["velo","Vélo"],["elliptique","Élliptique"],["cote","Côte"]];
+ h+='<div class="card"><div class="pad"><h2>Cardio — semaine '+selW+'</h2>';
  var runsArr=ST.runs["w"+selW]||[];
  for(var ri=0;ri<w.run.c;ri++){
   var rr=runsArr[ri]||{},info=runSlotInfo(w,ri);
   h+='<div class="lbl" style="margin-top:'+(ri?"14px":"0")+'">'+esc(info.lbl)+' — '+esc(info.tgt)+'</div>'
-   +'<div class="fline"><input type="number" step="0.1" inputmode="decimal" placeholder="km" value="'+(rr.km!=null?rr.km:"")+'" onchange="setRunKm('+ri+',this.value)">'
+   +'<div class="fline"><select onchange="setRunType('+ri+',this.value)">'+CARDIO_TYPES.map(function(t){return '<option value="'+t[0]+'"'+(rr.type===t[0]||(!rr.type&&t[0]=="")?" selected":"")+'>'+t[1]+'</option>'}).join("")+'</select>'
+   +'<input type="number" step="0.1" inputmode="decimal" placeholder="km (optionnel)" value="'+(rr.km!=null?rr.km:"")+'" onchange="setRunKm('+ri+',this.value)">'
    +'<input type="number" inputmode="numeric" placeholder="min" value="'+(rr.min!=null?rr.min:"")+'" onchange="setRunMin('+ri+',this.value)"></div>';
  }
  h+='</div></div>';
