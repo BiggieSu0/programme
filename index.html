@@ -396,7 +396,7 @@ function rCal(){
   +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><h2>Semaine '+selW+'</h2><span class="phase'+(w.dl?" dl":"")+'">'+esc(w.ph)+'</span></div>'
   +'<div class="banner" style="margin:0">'+w.note+'</div></div></div>';
  h+='<div class="card"><div class="pad"><div class="banner" style="margin:0 0 10px"><span class="k">Jusqu\u2019où pousser</span>Arrête chaque série 1 à 3 reps avant l\u2019échec. Sur les exos <b>échec</b>, la dernière série peut aller jusqu\u2019à l\u2019échec technique — jamais sur la barre.</div>'
-  +'<div class="banner warn" style="margin:0"><span class="k">Quand monter les charges</span>Toutes les séries en haut de la fourchette → +2,5 kg (haut) ou +5 kg (bas) la séance suivante, et tu repars en bas de fourchette. Deux séances sans y arriver : tu restes, tu ne descends pas.</div></div></div>';
+  +'<div class="banner warn" style="margin:0"><span class="k">Quand monter les charges</span>Toutes les séries au sommet de la fourchette sur deux séances consécutives, avec un RIR renseigné à chaque série → +2,5 kg (haut) ou +5 kg (bas), et tu repars en bas de fourchette. Si tu n’y arrives pas : tu restes à la même charge, tu ne descends jamais.</div></div></div>';
  h+='<div class="card"><div class="pad valid"><div class="cnt"><b>'+nv+'/12</b> semaines validées</div>'
   +'<button class="vbtn'+(ST.valid["w"+selW]?" on":"")+'" onclick="tglValid()">'+(ST.valid["w"+selW]?"✓ Semaine "+selW+" validée":"Valider la semaine "+selW)+'</button></div></div>';
 
