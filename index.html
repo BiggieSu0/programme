@@ -286,7 +286,7 @@ var WEEKS = [
  {n:6,d:"19–27 sept",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre bord de mer, 20-30 min"},note:"<b>Maintien.</b> Entretien ~2900-3000 kcal, profite. 2 séances, pas plus."},
  {n:7,d:"28 sept – 4 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre — vise le 5 km continu"},note:"Le 5 km continu se joue ici : reposé, plus léger, au niveau de la mer."},
  {n:8,d:"5–11 oct",bloc:2,ph:"Bali",sess:["H"],run:{c:3,t:"Course libre"},note:"Dernière semaine de vacances. Retour dimanche."},
- {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps machine et écarté incliné. Retour au déficit."},
+ {n:9,d:"12–18 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"<b>Reprise.</b> Charges pré-remplies à 90 % de S5, ajuste si besoin. +1 série sur curl incliné, extension triceps poulie basse et écarté incliné. Retour au déficit."},
  {n:10,d:"19–25 oct",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"Retour aux charges de S5, puis on dépasse."},
  {n:11,d:"26 oct – 1 nov",bloc:3,ph:"Construction",sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"Volume maximal du programme."},
  {n:12,d:"2–8 nov",bloc:3,ph:"Bilan",dl:true,sess:["A","B","C","V"],run:{c:2,t:"Marche 30-45 min (mardi) · Cardio sans impact 20-25 min (samedi)"},note:"<b>Dernière semaine.</b> Tests, photos, mesures, bilan ensemble."}
@@ -477,7 +477,7 @@ function exoCard(x,code,w){
  if(hint)h+='<div class="hint'+(hint.ok?"":" wait")+'">'+(hint.ok?"↑ ":"")+esc(hint.text)+'</div>';
  if(pf!=null&&(!normed[0]||normed[0].kg==null))h+='<div class="hint">Repris à 90 % de S5 — ajuste si besoin.</div>';
  h+='<div class="ctrls"><div class="lbl">Séries — charge, reps, RIR (la série 1 pré-remplit les suivantes)</div><div class="setrows">';
- var nset=e.s+((w.bloc==3&&(x=="curlinc"||x=="tricmach"||x=="ecarte"))?1:0);
+ var nset=e.s+((w.bloc==3&&(x=="curlinc"||x=="tricpb"||x=="ecarte"))?1:0);
  var eff0kg=(normed[0]&&normed[0].kg!=null)?normed[0].kg:pf;
  var eff0reps=normed[0]?normed[0].reps:null;
  for(var i=0;i<nset;i++){
@@ -514,7 +514,7 @@ function startRest(key,secs){
 function rSession(w){
  var code=view.sess,base=code[0]=="H"?"H":code,s=SESS[base],h="";
  h+='<button class="backln" onclick="view.sess=null;render()">← Semaine '+selW+'</button>';
- if(w.bloc==3)h+='<div class="banner">Semaines 9-12 : <b>+1 série</b> sur curl incliné (A), extension triceps machine (B), écarté incliné (C). Dos et épaules inchangés.</div>';
+ if(w.bloc==3)h+='<div class="banner">Semaines 9-12 : <b>+1 série</b> sur curl incliné (A), extension triceps poulie basse (C), écarté incliné (C). Dos et épaules inchangés.</div>';
  h+='<div class="card"><div class="pad" style="border-bottom:1px solid var(--line)"><h2>'+esc(s.t)+'</h2><div style="font-size:12.5px;color:var(--mut);margin-top:2px">'+esc(s.sub)+'</div></div>';
  s.ex.forEach(function(x){
   if(typeof x=="string"){
